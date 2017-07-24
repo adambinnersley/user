@@ -1,0 +1,22 @@
+{
+    "name": "adamb/user",
+    "description": "A user class",
+    "type": "library",
+    "require": {
+        "adamb/database": "^1.0",
+        "phpmailer/phpmailer": "^5.2",
+        "bjeavons/zxcvbn-php": "^0.3.0"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Adam Binnersley",
+            "email": "abinnersley@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "UserAuth\\": "src/"
+        }
+    }
+}
