@@ -1110,30 +1110,55 @@ class User implements UserInterface{
         return $mail->send();
     }
     
+    /**
+     * Gets the users unique ID which has been assigned in the database
+     * @return int This should be the users unique ID
+     */
     public function getUserID(){
         if(!isset($this->userID)){$this->getUserInfo();}
         return $this->userID;
     }
     
+    /**
+     * Returns the user IP Address
+     * @return string This will be the users IP address
+     */
     public function getUserIP(){
-        $this->getIp();
+        return $this->getIp();
     }
-    
+
+    /**
+     * Returns the users email address if the user is logged in
+     * @return string This should be the users IP address if the user is logged in
+     */
     public function getUserEmail(){
         if(!isset($this->userInfo)){$this->getUserInfo();}
         return $this->userInfo['email'];
     }
     
+    /**
+     * Returns the users first name from the users information if they are logged in
+     * @return string This should be the users first name
+     */
     public function getFirstname(){
         if(!isset($this->userInfo)){$this->getUserInfo();}
         return $this->userInfo['first_name'];
     }
     
+    /**
+     * Returns the users last name from the users information if they are logged in
+     * @return string This should be the users last name
+     */
     public function getLastname(){
         if(!isset($this->userInfo)){$this->getUserInfo();}
         return $this->userInfo['last_name'];
     }
     
+    /**
+     * Returns any stored settings from the database that the user may have
+     * @param int|boolean $userID If you wish to get settings for a specific user set this here else to get settings for current user leave this blank or set to false
+     * @return array 
+     */
     public function getUserSettings($userID = false){
         $this->getUserInfo($userID);
         return unserialize($this->userInfo['settings']);
@@ -1141,7 +1166,6 @@ class User implements UserInterface{
     
     public function setUserSettings($vars, $userID = false){
         if(is_array($vars)){
-            
             return self::$db->update($this->config->table_users, array('settings' => serialize(array_filter($vars))), array('id' => $userID), 1);
         }
         return false;
