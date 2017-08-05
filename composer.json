@@ -4,9 +4,11 @@
     "type": "library",
     "require": {
         "adamb/database": "^1.0",
-        "adamb/config": "^1.0",
         "phpmailer/phpmailer": "^5.2",
         "bjeavons/zxcvbn-php": "^0.3.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^6.3"
     },
     "license": "MIT",
     "authors": [
@@ -18,6 +20,11 @@
     "autoload": {
         "psr-4": {
             "UserAuth\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "UserAuth\\Tests\\": "tests/"
         }
     }
 }
