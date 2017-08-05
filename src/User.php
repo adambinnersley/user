@@ -21,21 +21,24 @@ class User implements UserInterface{
     protected $userInfo;
     
     protected $storageType = 'database';
+    
+    //config
+    protected $site_timezone = 'Europe/London';
+    protected $cookie_name = 'authID';
 
     /**
      * Initiates essential objects
-     * @param DriverManager $db
+     * @param Database $db
      * @param Config $config
      * @param string $language
      */
-    public function __construct(Database $db, $config, $language = "en_GB"){
+    public function __construct(Database $db, $language = "en_GB"){
         self::$db = $db;
-        $this->config = $config;
         
         require "languages/{$language}.php";
         self::$lang = $lang;
 
-        date_default_timezone_set($this->config->site_timezone);
+        date_default_timezone_set($this->site_timezone);
     }
 
     /**
@@ -103,7 +106,7 @@ class User implements UserInterface{
         $return['message'] = self::$lang["logged_in"];
         $return['hash'] = $sessiondata['hash'];
         $return['expire'] = $sessiondata['expiretime'];
-        $return['cookie_name'] = $this->config->cookie_name;
+        $return['cookie_name'] = $this->cookie_name;
         return $return;
     }
     
@@ -244,7 +247,7 @@ class User implements UserInterface{
             return $return;
         }
 
-        $row = self::$db->query("SELECT `id` FROM `{$this->config->table_users}` WHERE `email` = ?;", array($email));
+        $row = self::$db->select($this->config->table_users, array('email' => $email), array('id'));
 	if(!$row){
             $this->addAttempt();
             $return['message'] = self::$lang["email_incorrect"];
@@ -278,9 +281,10 @@ class User implements UserInterface{
     /**
     * Hashes provided password with Bcrypt
     * @param string $password
+    * @param int $cost
     * @return string
     */
-    public function getHash($password){
+    public function getHash($password, $cost){
         return password_hash($password, PASSWORD_DEFAULT, ['cost' => $this->config->bcrypt_cost]);
     }
     
@@ -294,7 +298,7 @@ class User implements UserInterface{
             return $this->userID;
         }
         else{
-            $row = self::$db->query("SELECT `id` FROM `{$this->config->table_users}` WHERE `email` = ?;", array($email));
+            $row = self::$db->select($this->config->table_users, array('email' => $email), array('id'));
             if(!$row){
                 return false;
             }
@@ -364,7 +368,7 @@ class User implements UserInterface{
             return false;
         }
 
-        $row = self::$db->query("SELECT `id`, `uid`, `expiredate`, `ip`, `agent`, `cookie_crc` FROM `{$this->config->table_sessions}` WHERE `hash` = ?;", array($hash));
+        $row = self::$db->select($this->config->table_sessions, array('hash' => $hash));
         if(!$row){
             return false;
         }
@@ -391,7 +395,7 @@ class User implements UserInterface{
     * @return int $uid
     */
     public function getSessionUID($hash){
-        $row = self::$db->query("SELECT `uid` FROM `{$this->config->table_sessions}` WHERE `hash` = ?;", array($hash));
+        $row = self::$db->select($this->config->table_sessions, array('hash' => $hash) , array('uid'));
         if(!$row){
             return false;
         }
@@ -404,8 +408,7 @@ class User implements UserInterface{
     * @return boolean
     */
     public function isEmailTaken($email){
-        self::$db->query("SELECT count(*) FROM `{$this->config->table_users}` WHERE `email` = ?;", array($email));
-        if(self::$db->numRows() == 0){
+        if(self::$db->count($this->config->table_users, array('email' => $email)) == 0){
             return false;
         }
         return true;
@@ -446,7 +449,7 @@ class User implements UserInterface{
     * @return array $data
     */
     protected function getBaseUser($uid){
-        $data = self::$db->fetchAssoc("SELECT `email`, `password`, `isactive` FROM `{$this->config->table_users}` WHERE `id` = ?", array($uid));
+        $data = self::$db->select($this->config->table_users, array('id' => $uid), array('email', 'password', 'isactive'));
         if(!$data){
             return false;
         }
@@ -461,7 +464,7 @@ class User implements UserInterface{
     * @return array $data
     */
     public function getUser($uid){
-        $data = self::$db->fetchAssoc("SELECT * FROM `{$this->config->table_users}` WHERE `id` = ?;", array($uid));
+        $data = self::$db->select($this->config->table_users, array('id' => $uid));
         if(!$data){
             return false;
         }
@@ -1037,7 +1040,7 @@ class User implements UserInterface{
     * @return boolean
     */
     public function isLogged(){
-        return (isset($_COOKIE[$this->config->cookie_name]) && $this->checkSession($_COOKIE[$this->config->cookie_name]));
+        return (isset($_COOKIE[$this->cookie_name]) && $this->checkSession($_COOKIE[$this->cookie_name]));
     }
     
     /**
@@ -1045,7 +1048,7 @@ class User implements UserInterface{
      * @return string
      */
     public function getSessionHash(){
-        return $_COOKIE[$this->config->cookie_name];
+        return $_COOKIE[$this->cookie_name];
     }
     
     /**
@@ -1055,20 +1058,23 @@ class User implements UserInterface{
      * @return bool
      */
     public function comparePasswords($userid, $password_for_check){
-        $data = self::$db->select("SELECT `password` FROM `{$this->config->table_users}` WHERE `id` = ?;", array($userid));
+        $data = self::$db->select($this->config->table_users, array('id' => $userid), array('password'));
         if(!$data){
             return false;
         }
         return password_verify($password_for_check, $data['password']);
     }
     
-    public function getUserInfo($userID = false){
+    /**
+     * Returns the user information for the user who is currently logged in
+     * @return mixed If the user is logged in will return their information else will return false
+     */
+    public function getUserInfo(){
         if(is_array($this->userInfo)){
             return $this->userInfo;
         }
         else{
-            if(!is_numeric($userID)){$this->getUserID();}
-            $this->userInfo = self::$db->select($this->config->table_users, array('id' => $userID));
+            $this->userInfo = $this->getUser($this->getUserID());
             $this->userID = $this->userInfo['id'];
             return $this->userInfo;
         }
@@ -1115,8 +1121,14 @@ class User implements UserInterface{
      * @return int This should be the users unique ID
      */
     public function getUserID(){
-        if(!isset($this->userID)){$this->getUserInfo();}
-        return $this->userID;
+        if(isset($this->userID) && is_numeric($this->userID)){
+            return $this->userID;
+        }
+        elseif($this->isLogged()){
+            $this->userID = $this->getSessionUID($this->getSessionHash());
+            return $this->userID;
+        }
+        return false;
     }
     
     /**
@@ -1164,6 +1176,12 @@ class User implements UserInterface{
         return unserialize($this->userInfo['settings']);
     }
     
+    /**
+     * Sets the stored settings in the database for the given user
+     * @param array $vars This should be an array of any settings you wish to add the the user
+     * @param int $userID This should be the user ID that you are applying the settings update to
+     * @return boolean If the settings are updated successfully will return true else returns false
+     */
     public function setUserSettings($vars, $userID = false){
         if(is_array($vars)){
             return self::$db->update($this->config->table_users, array('settings' => serialize(array_filter($vars))), array('id' => $userID), 1);
