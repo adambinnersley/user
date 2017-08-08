@@ -1,4 +1,6 @@
 <?php
+namespace UserAuth;
+
 interface UserInterface{
     public function __construct($db, $config, $language = "en_GB");
     public function login($email, $password, $remember = 0, $captcha = NULL);
