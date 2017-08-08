@@ -1096,13 +1096,17 @@ class User implements UserInterface{
     
     /**
      * Returns the user information for the user who is currently logged in
+     * @param 
      * @return mixed If the user is logged in will return their information else will return false
      */
-    public function getUserInfo(){
-        if(is_array($this->userInfo)){
+    public function getUserInfo($userID = false){
+        if(is_array($this->userInfo) && $userID === false){
             return $this->userInfo;
         }
         else{
+            if(is_numeric($userID)){
+                return $this->getUser($userID);
+            }
             $this->userInfo = $this->getUser($this->getUserID());
             $this->userID = $this->userInfo['id'];
             return $this->userInfo;
