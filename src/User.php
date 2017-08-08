@@ -162,6 +162,7 @@ class User implements UserInterface{
     * @return array $return
     */
     public function register($email, $password, $repeatpassword, $params = array(), $captcha = NULL, $sendmail = NULL){
+        $return = array();
         $return['error'] = true;
         $block_status = $this->isBlocked();
 
@@ -493,7 +494,7 @@ class User implements UserInterface{
     /**
     * Gets public user data for a given UID and returns an array, password is not returned
     * @param int $uid
-    * @return array $data
+    * @return array|false $data
     */
     public function getUser($uid){
         $data = self::$db->select($this->table_users, array('id' => $uid));
@@ -1041,7 +1042,7 @@ class User implements UserInterface{
      * @return boolean
      */
     protected function deleteAttempts($ip, $all = true){
-        if($all == true){
+        if($all === true){
             return self::$db->delete($this->table_attempts, array('ip' => $ip));
         }
         return self::$db->delete($this->table_attempts, array('ip' => $ip, 'expirydate' => array('<=', strtotime(date("Y-m-d H:i:s")))));
@@ -1117,10 +1118,14 @@ class User implements UserInterface{
             if(is_numeric($userID)){
                 return $this->getUser($userID);
             }
-            $this->userInfo = $this->getUser($this->getUserID());
-            $this->userID = $this->userInfo['id'];
-            return $this->userInfo;
+            $userInfo = $this->getUser($this->getUserID());
+            if(!empty($userInfo)){
+                $this->userInfo = $userInfo;
+                $this->userID = $userInfo['id'];
+                return $this->userInfo;
+            }
         }
+        return false;
     }
     
     /**
@@ -1175,7 +1180,7 @@ class User implements UserInterface{
     
     /**
      * Returns any stored settings from the database that the user may have
-     * @param int|boolean $userID If you wish to get settings for a specific user set this here else to get settings for current user leave this blank or set to false
+     * @param int|false $userID If you wish to get settings for a specific user set this here else to get settings for current user leave this blank or set to false
      * @return array 
      */
     public function getUserSettings($userID = false){
