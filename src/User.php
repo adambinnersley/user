@@ -144,7 +144,7 @@ class User implements UserInterface{
      * Checks to see if the username and password match that whats in the database
      * @param string $username This should be the users email address
      * @param string $password This should be the users password
-     * @return array|boolean If the information is correct the users information will be returned else will return false
+     * @return array|false If the information is correct the users information will be returned else will return false
      */
     protected function checkUsernamePassword($username, $password){
         return self::$db->select($this->table_users, array('email' => strtolower($username), 'password' => $this->getHash($password)));
@@ -311,7 +311,6 @@ class User implements UserInterface{
     /**
     * Hashes provided password with Bcrypt
     * @param string $password
-    * @param int $cost
     * @return string
     */
     public function getHash($password){
@@ -449,6 +448,7 @@ class User implements UserInterface{
     * @param string $email      -- email
     * @param string $password   -- password
     * @param array $params      -- additional params
+    * @param boolean|null $sendmail
     * @return int $uid
     */
     protected function addUser($email, $password, $params = array(), &$sendmail){
@@ -630,6 +630,7 @@ class User implements UserInterface{
     * @return array $return
     */
     public function getRequest($key, $type){
+        $return = array();
         $return['error'] = true;
         
         $request = self::$db->select($this->table_requests, array('rkey' => $key, 'type' => $type), array('id', 'uid', 'expire'));
@@ -1025,8 +1026,8 @@ class User implements UserInterface{
     
     /**
      * Deletes all attempts for a given IP from database
-     * @param type $ip
-     * @param type $all
+     * @param string $ip
+     * @param boolean $all
      * @return boolean
      */
     protected function deleteAttempts($ip, $all = true){
