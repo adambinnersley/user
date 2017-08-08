@@ -787,7 +787,7 @@ class User implements UserInterface{
         }
 
         $query = self::$db->update($this->table_users, array('password' => $this->getHash($password)), array('id' => $data['uid']));
-        if($query->rowCount() == 0){
+        if($query === false){
             $return['message'] = self::$lang["system_error"] . " #12";
             return $return;
         }
