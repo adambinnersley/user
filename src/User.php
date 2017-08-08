@@ -214,7 +214,7 @@ class User implements UserInterface{
         }
 
         $return['error'] = false;
-        $return['message'] = ($sendmail == true ? self::$lang["register_success"] : self::$lang['register_success_emailmessage_suppressed']);
+        $return['message'] = ($sendmail === true ? self::$lang["register_success"] : self::$lang['register_success_emailmessage_suppressed']);
         return $return;
     }
     
@@ -250,7 +250,7 @@ class User implements UserInterface{
         }
         
         self::$db->update($this->table_users, array('isactive' => 1), array('id' => $request['uid']));
-        $this->deleteRequest($getRequest['id']);
+        $this->deleteRequest($request['id']);
 
         $return['error'] = false;
         $return['message'] = self::$lang["account_activated"];
@@ -278,7 +278,7 @@ class User implements UserInterface{
         }
 
         $row = self::$db->select($this->table_users, array('email' => $email), array('id'));
-	if(!$row){
+	if(empty($row)){
             $this->addAttempt();
             $return['message'] = self::$lang["email_incorrect"];
             return $return;
@@ -292,7 +292,7 @@ class User implements UserInterface{
         }
 
         $return['error'] = false;
-        $return['message'] = ($sendmail == true ? self::$lang["reset_requested"] : self::$lang['reset_requested_emailmessage_suppressed']);
+        $return['message'] = ($sendmail === true ? self::$lang["reset_requested"] : self::$lang['reset_requested_emailmessage_suppressed']);
         return $return;
     }
     
@@ -320,7 +320,7 @@ class User implements UserInterface{
     /**
     * Gets UID for a given email address and returns an array
     * @param string $email
-    * @return array $uid
+    * @return int|false 
     */
     public function getUID($email){
         if(is_numeric($this->userID)){
@@ -328,7 +328,7 @@ class User implements UserInterface{
         }
         else{
             $row = self::$db->select($this->table_users, array('email' => $email), array('id'));
-            if(!$row){
+            if(empty($row)){
                 return false;
             }
             return $row['id'];
@@ -398,7 +398,7 @@ class User implements UserInterface{
         }
 
         $row = self::$db->select($this->table_sessions, array('hash' => $hash));
-        if(!$row){
+        if(empty($row)){
             return false;
         }
 
@@ -421,11 +421,11 @@ class User implements UserInterface{
     /**
     * Retrieves the UID associated with a given session hash
     * @param string $hash
-    * @return int $uid
+    * @return int|false
     */
     public function getSessionUID($hash){
         $row = self::$db->select($this->table_sessions, array('hash' => $hash) , array('uid'));
-        if(!$row){
+        if(empty($row)){
             return false;
         }
         return $row['uid'];
@@ -1097,7 +1097,7 @@ class User implements UserInterface{
      */
     public function comparePasswords($userid, $password_for_check){
         $data = self::$db->select($this->table_users, array('id' => $userid), array('password'));
-        if(!$data){
+        if(empty($data)){
             return false;
         }
         return password_verify($password_for_check, $data['password']);
@@ -1109,7 +1109,7 @@ class User implements UserInterface{
      * @return mixed If the user is logged in will return their information else will return false
      */
     public function getUserInfo($userID = false){
-        if(is_array($this->userInfo) && $userID === false){
+        if(is_array($this->userInfo) && !is_numeric($userID)){
             return $this->userInfo;
         }
         else{
