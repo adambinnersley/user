@@ -80,6 +80,7 @@ class User implements UserInterface{
      * @return array $return
      */
     public function login($email, $password, $remember = true, $captcha = NULL){
+        $return = array();
         $return['error'] = true;
 
         $block_status = $this->isBlocked();
@@ -323,7 +324,7 @@ class User implements UserInterface{
     * @return int|false 
     */
     public function getUID($email){
-        if(is_numeric($this->userID)){
+        if(is_int($this->userID)){
             return $this->userID;
         }
         else{
@@ -1127,11 +1128,11 @@ class User implements UserInterface{
      * @return int This should be the users unique ID
      */
     public function getUserID(){
-        if(isset($this->userID) && is_numeric($this->userID)){
+        if(is_int($this->userID)){
             return $this->userID;
         }
         elseif($this->isLogged()){
-            $this->userID = $this->getSessionUID($this->getSessionHash());
+            $this->userID = intval($this->getSessionUID($this->getSessionHash()));
             return $this->userID;
         }
         return false;
