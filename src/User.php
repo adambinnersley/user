@@ -75,7 +75,7 @@ class User implements UserInterface{
      * Logs a user in
      * @param string $email
      * @param string $password
-     * @param int $remember
+     * @param int|boolean $remember
      * @param string $captcha = NULL
      * @return array $return
      */
@@ -338,7 +338,7 @@ class User implements UserInterface{
     /**
     * Creates a session for a specified user id
     * @param int $uid
-    * @param boolean $remember
+    * @param int|boolean $remember
     * @return array $data
     */
     protected function addSession($uid, $remember){
