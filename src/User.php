@@ -1096,7 +1096,7 @@ class User implements UserInterface{
     
     /**
      * Returns the user information for the user who is currently logged in
-     * @param 
+     * @param int|false $userID
      * @return mixed If the user is logged in will return their information else will return false
      */
     public function getUserInfo($userID = false){
