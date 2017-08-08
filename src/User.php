@@ -345,7 +345,7 @@ class User implements UserInterface{
         if(!$this->getBaseUser($uid)){
             return false;
         }
-
+        $data = array();
         $data['hash'] = sha1(SITE_KEY . microtime());
         $this->deleteExistingSessions($uid);
         if($remember == true){
@@ -452,6 +452,7 @@ class User implements UserInterface{
     * @return int $uid
     */
     protected function addUser($email, $password, $params = array(), &$sendmail){
+        $return = array();
         $return['error'] = true;
 
         $safeemail = htmlentities(strtolower($email));
@@ -480,7 +481,7 @@ class User implements UserInterface{
     */
     protected function getBaseUser($uid){
         $data = self::$db->select($this->table_users, array('id' => $uid), array('email', 'password', 'isactive'));
-        if(!$data){
+        if(empty($data)){
             return false;
         }
         
@@ -495,7 +496,7 @@ class User implements UserInterface{
     */
     public function getUser($uid){
         $data = self::$db->select($this->table_users, array('id' => $uid));
-        if(!$data){
+        if(empty($data)){
             return false;
         }
         $data['uid'] = $uid;
@@ -511,6 +512,7 @@ class User implements UserInterface{
     * @return array $return
     */
     public function deleteUser($uid, $password, $captcha = NULL){
+        $return = array();
         $return['error'] = true;
 
         $block_status = $this->isBlocked();
@@ -560,6 +562,7 @@ class User implements UserInterface{
     * @return boolean
     */
     protected function addRequest($uid, $email, $type, &$sendmail){
+        $return = array();
         $return['error'] = true;
 
         if($type != "activation" && $type != "reset"){
@@ -668,6 +671,7 @@ class User implements UserInterface{
     * @return array $return
     */
     protected function validatePassword($password){
+        $return = array();
         $return['error'] = true;
         if(strlen($password) < 5){
             $return['message'] = self::$lang["password_short"];
@@ -684,6 +688,7 @@ class User implements UserInterface{
     * @return array $return
     */
     protected function validateEmail($email){
+        $return = array();
         $return['error'] = true;
 
         if(strlen($email) < 5){
@@ -719,6 +724,7 @@ class User implements UserInterface{
     * @return array $return
     */
     public function resetPass($key, $password, $repeatpassword, $captcha = NULL){
+        $return = array();
         $return['error'] = true;
         $block_status = $this->isBlocked();
 
@@ -797,6 +803,7 @@ class User implements UserInterface{
     * @return array $return
     */
     public function resendActivation($email, $sendmail = NULL){
+        $return = array();
         $return['error'] = true;
 
         if($this->isBlocked() == "block"){
@@ -850,6 +857,7 @@ class User implements UserInterface{
     * @return array $return
     */
     public function changePassword($uid, $currpass, $newpass, $repeatnewpass, $captcha = NULL){
+        $return = array();
         $return['error'] = true;
         
         $block_status = $this->isBlocked();
@@ -916,6 +924,7 @@ class User implements UserInterface{
     * @return array $return
     */
     public function changeEmail($uid, $email, $password, $captcha = NULL){
+        $return = array();
         $return['error'] = true;
         $block_status = $this->isBlocked();
 
