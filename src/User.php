@@ -84,7 +84,7 @@ class User implements UserInterface{
 
         $block_status = $this->isBlocked();
         if($block_status == "verify"){
-            if($this->checkCaptcha($captcha) == false){
+            if($this->checkCaptcha($captcha) === false){
                 $return['message'] = self::$lang["user_verify_failed"];
                 return $return;
             }
@@ -165,7 +165,7 @@ class User implements UserInterface{
         $block_status = $this->isBlocked();
 
         if($block_status == "verify"){
-            if($this->checkCaptcha($captcha) == false){
+            if($this->checkCaptcha($captcha) === false){
                 $return['message'] = self::$lang["user_verify_failed"];
                 return $return;
             }
@@ -515,7 +515,7 @@ class User implements UserInterface{
 
         $block_status = $this->isBlocked();
         if($block_status == "verify"){
-            if($this->checkCaptcha($captcha) == false){
+            if($this->checkCaptcha($captcha) === false){
                 $return['message'] = self::$lang["user_verify_failed"];
                 return $return;
             }
@@ -723,7 +723,7 @@ class User implements UserInterface{
         $block_status = $this->isBlocked();
 
         if($block_status == "verify"){
-            if($this->checkCaptcha($captcha) == false){
+            if($this->checkCaptcha($captcha) === false){
                 $return['message'] = self::$lang["user_verify_failed"];
                 return $return;
             }
@@ -854,7 +854,7 @@ class User implements UserInterface{
         
         $block_status = $this->isBlocked();
         if($block_status == "verify"){
-            if($this->checkCaptcha($captcha) == false){
+            if($this->checkCaptcha($captcha) === false){
                 $return['message'] = self::$lang["user_verify_failed"];
                 return $return;
             }
@@ -920,7 +920,7 @@ class User implements UserInterface{
         $block_status = $this->isBlocked();
 
         if ($block_status == "verify") {
-            if ($this->checkCaptcha($captcha) == false) {
+            if ($this->checkCaptcha($captcha) === false) {
                 $return['message'] = self::$lang["user_verify_failed"];
 
                 return $return;
