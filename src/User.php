@@ -52,7 +52,7 @@ class User implements UserInterface{
      * @param Database $db
      * @param string $language
      */
-    public function __construct(Database $db, $language = "en_GB"){
+    public function __construct(Database $db, $language = "en_GB") {
         self::$db = $db;
         
         require "languages/{$language}.php";
@@ -61,11 +61,11 @@ class User implements UserInterface{
         date_default_timezone_set($this->site_timezone);
     }
     
-    public function __get($name){
+    public function __get($name) {
         return $this->$name;
     }
     
-    public function __set($name, $value){
+    public function __set($name, $value) {
         if(defined($this->$name)){
             $this->$name = $value;
         }
@@ -79,56 +79,56 @@ class User implements UserInterface{
      * @param string $captcha = NULL
      * @return array $return
      */
-    public function login($email, $password, $remember = true, $captcha = NULL){
+    public function login($email, $password, $remember = true, $captcha = NULL) {
         $return = array();
         $return['error'] = true;
 
         $block_status = $this->isBlocked();
-        if($block_status == "verify"){
-            if($this->checkCaptcha($captcha) === false){
+        if ($block_status == "verify") {
+            if ($this->checkCaptcha($captcha) === false) {
                 $return['message'] = self::$lang["user_verify_failed"];
                 return $return;
             }
         }
 
-        if($block_status == "block"){
+        if ($block_status == "block") {
             $return['message'] = self::$lang["user_blocked"];
             return $return;
         }
 
         $validateEmail = $this->validateEmail($email);
         $validatePassword = $this->validatePassword($password);
-        if($validateEmail['error'] == 1){
+        if ($validateEmail['error'] == 1) {
             $this->addAttempt();
             $return['message'] = self::$lang["email_password_invalid"];
             return $return;
         }
-        elseif($validatePassword['error'] == 1){
+        elseif ($validatePassword['error'] == 1) {
             $this->addAttempt();
             $return['message'] = self::$lang["email_password_invalid"];
             return $return;
         }
-        elseif($remember != 0 && $remember != 1){
+        elseif ($remember != 0 && $remember != 1) {
             $this->addAttempt();
             $return['message'] = self::$lang["remember_me_invalid"];
             return $return;
         }
 
         $user = $this->checkUsernamePassword($email, $password);
-        if(!$user){
+        if (!$user) {
             $this->addAttempt();
             $return['message'] = self::$lang["email_password_incorrect"];
             return $return;
         }
 
-        if($user['isactive'] != 1){
+        if ($user['isactive'] != 1) {
             $this->addAttempt();
             $return['message'] = self::$lang["account_inactive"];
             return $return;
         }
         
         $sessiondata = $this->addSession($user['uid'], $remember);
-        if($sessiondata == false){
+        if ($sessiondata == false) {
             $return['message'] = self::$lang["system_error"] . " #01";
             return $return;
         }
@@ -147,7 +147,7 @@ class User implements UserInterface{
      * @param string $password This should be the users password
      * @return array|false If the information is correct the users information will be returned else will return false
      */
-    protected function checkUsernamePassword($username, $password){
+    protected function checkUsernamePassword($username, $password) {
         return self::$db->select($this->table_users, array('email' => strtolower($username), 'password' => $this->getHash($password)));
     }
     
@@ -161,56 +161,56 @@ class User implements UserInterface{
     * @param bool $sendmail = NULL
     * @return array $return
     */
-    public function register($email, $password, $repeatpassword, $params = array(), $captcha = NULL, $sendmail = NULL){
+    public function register($email, $password, $repeatpassword, $params = array(), $captcha = NULL, $sendmail = NULL) {
         $return = array();
         $return['error'] = true;
         $block_status = $this->isBlocked();
 
-        if($block_status == "verify"){
-            if($this->checkCaptcha($captcha) === false){
+        if ($block_status == "verify") {
+            if ($this->checkCaptcha($captcha) === false) {
                 $return['message'] = self::$lang["user_verify_failed"];
                 return $return;
             }
         }
 
-        if($block_status == "block"){
+        if ($block_status == "block") {
             $return['message'] = self::$lang["user_blocked"];
             return $return;
         }
 
-        if($password !== $repeatpassword){
+        if ($password !== $repeatpassword) {
             $return['message'] = self::$lang["password_nomatch"];
             return $return;
         }
 
         // Validate email
         $validateEmail = $this->validateEmail($email);
-        if($validateEmail['error'] == 1){
+        if ($validateEmail['error'] == 1) {
             $return['message'] = $validateEmail['message'];
             return $return;
         }
 
         // Validate password
         $validatePassword = $this->validatePassword($password);
-        if($validatePassword['error'] == 1){
+        if ($validatePassword['error'] == 1) {
             $return['message'] = $validatePassword['message'];
             return $return;
         }
 
         $strength = new PasswordStrength();
-        if($strength->passwordStrength($password)['score'] < intval($this->password_min_score)){
+        if ($strength->passwordStrength($password)['score'] < intval($this->password_min_score)) {
             $return['message'] = self::$lang['password_weak'];
             return $return;
         }
 
-        if($this->isEmailTaken($email)){
+        if ($this->isEmailTaken($email)) {
             $this->addAttempt();
             $return['message'] = self::$lang["email_taken"];
             return $return;
         }
 
         $addUser = $this->addUser($email, $password, $params, $sendmail);
-        if($addUser['error'] != 0){
+        if ($addUser['error'] != 0) {
             $return['message'] = $addUser['message'];
             return $return;
         }
@@ -225,7 +225,7 @@ class User implements UserInterface{
     * @param string $key
     * @return array $return
     */
-    public function activate($key){
+    public function activate($key) {
         $return = array();
         $return['error'] = true;
         if($this->isBlocked() == "block"){
@@ -267,6 +267,7 @@ class User implements UserInterface{
     * @return array $return
     */
     public function requestReset($email, $sendmail = NULL){
+        $return = array();
         $return['error'] = true;
 
         if($this->isBlocked() == "block"){
@@ -900,7 +901,7 @@ class User implements UserInterface{
         }
 
         $user = $this->getBaseUser($uid);
-        if(!$user){
+        if(empty($user)){
             $this->addAttempt();
             $return['message'] = self::$lang["system_error"] . " #13";
             return $return;
@@ -969,8 +970,7 @@ class User implements UserInterface{
         }
 
         $user = $this->getBaseUser($uid);
-
-        if (!$user) {
+        if (empty($user)) {
             $this->addAttempt();
             $return['message'] = self::$lang["system_error"] . " #14";
 
@@ -1025,7 +1025,27 @@ class User implements UserInterface{
      * @return boolean
      */
     protected function checkCaptcha($captcha){
-        return true;
+        try {
+            $url = 'https://www.google.com/recaptcha/api/siteverify';
+            $data = ['secret'   => 'your_secret_here',
+            'response' => $captcha,
+            'remoteip' => $this->getIp()];
+
+            $options = [
+                'http' => [
+                'header'  => "Content-type: application/x-www-form-urlencoded\r\n",
+                'method'  => 'POST',
+                'content' => http_build_query($data)
+                ]
+            ];
+
+            $context  = stream_context_create($options);
+            $result = file_get_contents($url, false, $context);
+            return json_decode($result)->success;
+        }
+        catch (\Exception $e) {
+            return false;
+        }
     }
     
     /**
