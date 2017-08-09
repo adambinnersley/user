@@ -15,6 +15,13 @@ interface UserInterface{
     public function getSessionUID($hash);
     public function isEmailTaken($email);
     public function getUser($uid);
+    public function getUserID();
+    public function getUserEmail();
+    public function getUserInfo();
+    public function getFirstname();
+    public function getLastname();
+    public function getUserSettings();
+    public function setUserSettings($vars);
     public function deleteUser($uid, $password, $captcha = NULL);
     public function getRequest($key, $type);
     public function resetPass($key, $password, $repeatpassword, $captcha = NULL);
@@ -26,14 +33,5 @@ interface UserInterface{
     public function isLogged();
     public function getSessionHash();
     public function comparePasswords($userid, $password_for_check);
-    
-    // Adams functions
-    public function getUserID();
     public function getUserIP();
-    public function getUserEmail();
-    public function getUserInfo();
-    public function getFirstname();
-    public function getLastname();
-    public function getUserSettings();
-    public function setUserSettings($vars);
 }
