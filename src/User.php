@@ -226,6 +226,7 @@ class User implements UserInterface{
     * @return array $return
     */
     public function activate($key){
+        $return = array();
         $return['error'] = true;
         if($this->isBlocked() == "block"){
             $return['message'] = self::$lang["user_blocked"];
@@ -1107,7 +1108,7 @@ class User implements UserInterface{
     
     /**
      * Returns the user information for the user who is currently logged in
-     * @param int|false $userID
+     * @param int|boolean $userID
      * @return mixed If the user is logged in will return their information else will return false
      */
     public function getUserInfo($userID = false){
