@@ -90,17 +90,10 @@ class User implements UserInterface{
     public function login($email, $password, $remember = true, $captcha = NULL) {
         $return = array();
         $return['error'] = true;
-
-        $block_status = $this->isBlocked();
-        if ($block_status == "verify") {
-            if ($this->checkCaptcha($captcha) === false) {
-                $return['message'] = self::$lang["user_verify_failed"];
-                return $return;
-            }
-        }
-
-        if ($block_status == "block") {
-            $return['message'] = self::$lang["user_blocked"];
+        
+        $block_status = $this->blockStatus($captcha);
+        if($block_status){
+            $return['message'] = $block_status;
             return $return;
         }
 
@@ -167,17 +160,10 @@ class User implements UserInterface{
     public function register($email, $password, $repeatpassword, $params = array(), $captcha = NULL, $sendmail = NULL) {
         $return = array();
         $return['error'] = true;
-        $block_status = $this->isBlocked();
-
-        if ($block_status == "verify") {
-            if ($this->checkCaptcha($captcha) === false) {
-                $return['message'] = self::$lang["user_verify_failed"];
-                return $return;
-            }
-        }
-
-        if ($block_status == "block") {
-            $return['message'] = self::$lang["user_blocked"];
+        
+        $block_status = $this->blockStatus($captcha);
+        if($block_status){
+            $return['message'] = $block_status;
             return $return;
         }
 
@@ -186,14 +172,12 @@ class User implements UserInterface{
             return $return;
         }
 
-        // Validate email
         $validateEmail = $this->validateEmail($email);
         if ($validateEmail['error'] == 1) {
             $return['message'] = $validateEmail['message'];
             return $return;
         }
 
-        // Validate password
         $validatePassword = $this->validatePassword($password);
         if ($validatePassword['error'] == 1) {
             $return['message'] = $validatePassword['message'];
@@ -522,16 +506,9 @@ class User implements UserInterface{
         $return = array();
         $return['error'] = true;
 
-        $block_status = $this->isBlocked();
-        if($block_status == "verify"){
-            if($this->checkCaptcha($captcha) === false){
-                $return['message'] = self::$lang["user_verify_failed"];
-                return $return;
-            }
-        }
-
-        if($block_status == "block"){
-            $return['message'] = self::$lang["user_blocked"];
+        $block_status = $this->blockStatus($captcha);
+        if($block_status){
+            $return['message'] = $block_status;
             return $return;
         }
 
@@ -733,17 +710,10 @@ class User implements UserInterface{
     public function resetPass($key, $password, $repeatpassword, $captcha = NULL){
         $return = array();
         $return['error'] = true;
-        $block_status = $this->isBlocked();
-
-        if($block_status == "verify"){
-            if($this->checkCaptcha($captcha) === false){
-                $return['message'] = self::$lang["user_verify_failed"];
-                return $return;
-            }
-        }
-
-        if($block_status == "block"){
-            $return['message'] = self::$lang["user_blocked"];
+        
+        $block_status = $this->blockStatus($captcha);
+        if($block_status){
+            $return['message'] = $block_status;
             return $return;
         }
 
@@ -760,7 +730,6 @@ class User implements UserInterface{
         }
 
         if($password !== $repeatpassword){
-            // Passwords don't match
             $return['message'] = self::$lang["newpassword_nomatch"];
             return $return;
         }
@@ -867,16 +836,9 @@ class User implements UserInterface{
         $return = array();
         $return['error'] = true;
         
-        $block_status = $this->isBlocked();
-        if($block_status == "verify"){
-            if($this->checkCaptcha($captcha) === false){
-                $return['message'] = self::$lang["user_verify_failed"];
-                return $return;
-            }
-        }
-
-        if($block_status == "block"){
-            $return['message'] = self::$lang["user_blocked"];
+        $block_status = $this->blockStatus($captcha);
+        if($block_status){
+            $return['message'] = $block_status;
             return $return;
         }
 
@@ -933,19 +895,10 @@ class User implements UserInterface{
     public function changeEmail($uid, $email, $password, $captcha = NULL){
         $return = array();
         $return['error'] = true;
-        $block_status = $this->isBlocked();
-
-        if ($block_status == "verify") {
-            if ($this->checkCaptcha($captcha) === false) {
-                $return['message'] = self::$lang["user_verify_failed"];
-
-                return $return;
-            }
-        }
-
-        if ($block_status == "block") {
-            $return['message'] = self::$lang["user_blocked"];
-
+        
+        $block_status = $this->blockStatus($captcha);
+        if($block_status){
+            $return['message'] = $block_status;
             return $return;
         }
 
@@ -1020,6 +973,25 @@ class User implements UserInterface{
             return "verify";
         }
         return "block";
+    }
+    
+    /**
+     * Checks to see if the user is blocked or needs to verify 
+     * @param string $captcha This should be the captcha string
+     * @return string|false If the verification fails or the user is blocked will return an error message else will return false
+     */
+    protected function blockStatus($captcha){
+        $block_status = $this->isBlocked();
+        if ($block_status == "verify") {
+            if ($this->checkCaptcha($captcha) === false) {
+                return self::$lang["user_verify_failed"];
+            }
+        }
+
+        if ($block_status == "block") {
+            return self::$lang["user_blocked"];
+        }
+        return false;
     }
     
     /**
