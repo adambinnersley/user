@@ -141,6 +141,15 @@ class User implements UserInterface{
     }
     
     /**
+     * 
+     * @param string $email
+     * @return array|false
+     */
+    protected function checkEmailExists($email){
+        return self::$db->select($this->table_users, array('email' => $email), array('id'));
+    }
+    
+    /**
     * Creates a new user, adds them to database
     * @param string $email
     * @param string $password
@@ -255,7 +264,7 @@ class User implements UserInterface{
             return $return;
         }
 
-        $row = self::$db->select($this->table_users, array('email' => $email), array('id'));
+        $row = $this->checkEmailExists($email);
 	if(empty($row)){
             $this->addAttempt();
             $return['message'] = self::$lang["email_incorrect"];
@@ -305,7 +314,7 @@ class User implements UserInterface{
             return $this->userID;
         }
         else{
-            $row = self::$db->select($this->table_users, array('email' => $email), array('id'));
+            $row = $this->checkEmailExists($email);
             if(empty($row)){
                 return false;
             }
@@ -747,8 +756,7 @@ class User implements UserInterface{
             return $return;
         }
 
-        $query = self::$db->update($this->table_users, array('password' => $this->getHash($password)), array('id' => $data['uid']));
-        if($query === false){
+        if(self::$db->update($this->table_users, array('password' => $this->getHash($password)), array('id' => $data['uid'])) === false){
             $return['message'] = self::$lang["system_error"] . " #12";
             return $return;
         }
@@ -784,7 +792,7 @@ class User implements UserInterface{
             return $return;
         }
 
-        $row = self::$db->select($this->table_users, array('email' => $email), array('id'));
+        $row = $this->checkEmailExists($email);
         if(empty($row)){
             $this->addAttempt();
             $return['message'] = self::$lang["email_incorrect"];
@@ -967,8 +975,8 @@ class User implements UserInterface{
     
     /**
      * 
-     * @param type $email
-     * @param type $password
+     * @param string $email
+     * @param string $password
      * @return boolean
      */
     protected function validateEmailPassword($email, $password){
