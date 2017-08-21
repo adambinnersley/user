@@ -92,7 +92,7 @@ class User implements UserInterface{
         $return['error'] = true;
         
         $block_status = $this->blockStatus($captcha);
-        if($block_status){
+        if($block_status !== false) {
             $return['message'] = $block_status;
             return $return;
         }
@@ -162,7 +162,7 @@ class User implements UserInterface{
         $return['error'] = true;
         
         $block_status = $this->blockStatus($captcha);
-        if($block_status){
+        if($block_status !== false) {
             $return['message'] = $block_status;
             return $return;
         }
@@ -507,7 +507,7 @@ class User implements UserInterface{
         $return['error'] = true;
 
         $block_status = $this->blockStatus($captcha);
-        if($block_status){
+        if($block_status !== false) {
             $return['message'] = $block_status;
             return $return;
         }
@@ -712,7 +712,7 @@ class User implements UserInterface{
         $return['error'] = true;
         
         $block_status = $this->blockStatus($captcha);
-        if($block_status){
+        if($block_status !== false) {
             $return['message'] = $block_status;
             return $return;
         }
@@ -837,7 +837,7 @@ class User implements UserInterface{
         $return['error'] = true;
         
         $block_status = $this->blockStatus($captcha);
-        if($block_status){
+        if($block_status !== false) {
             $return['message'] = $block_status;
             return $return;
         }
@@ -897,7 +897,7 @@ class User implements UserInterface{
         $return['error'] = true;
         
         $block_status = $this->blockStatus($captcha);
-        if($block_status){
+        if($block_status !== false) {
             $return['message'] = $block_status;
             return $return;
         }
