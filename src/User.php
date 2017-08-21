@@ -971,7 +971,7 @@ class User implements UserInterface{
      * @param type $password
      * @return boolean
      */
-    protected function validateEmailPassword($email, $password = false){
+    protected function validateEmailPassword($email, $password){
         $validateEmail = $this->validateEmail($email);
         if ($validateEmail['error'] == 1) {
             $this->addAttempt();
