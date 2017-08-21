@@ -772,17 +772,12 @@ class User implements UserInterface{
     * @param string $email
     * @return array $return
     */
-    public function resendActivation($email, $sendmail = NULL){
+    public function resendActivation($email){
         $return = array();
         $return['error'] = true;
 
         if($this->isBlocked() == "block"){
             $return['message'] = self::$lang["user_blocked"];
-            return $return;
-        }
-
-        if($sendmail == NULL){
-            $return['message'] = self::$lang['function_disabled'];
             return $return;
         }
 
@@ -805,7 +800,7 @@ class User implements UserInterface{
             return $return;
         }
 
-        $addRequest = $this->addRequest($row['id'], $email, "activation", $sendmail);
+        $addRequest = $this->addRequest($row['id'], $email, "activation", NULL);
         if($addRequest['error'] == 1){
             $this->addAttempt();
             $return['message'] = $addRequest['message'];
