@@ -975,14 +975,12 @@ class User implements UserInterface{
         $validateEmail = $this->validateEmail($email);
         if ($validateEmail['error'] == 1) {
             $this->addAttempt();
-            $return['message'] = self::$lang["email_password_invalid"];
-            return $return;
+            return self::$lang["email_password_invalid"];
         }
         $validatePassword = $this->validatePassword($password);
         if ($validatePassword['error'] == 1) {
             $this->addAttempt();
-            $return['message'] = self::$lang["email_password_invalid"];
-            return $return;
+            return self::$lang["email_password_invalid"];
         }
         return false;
     }
