@@ -97,16 +97,9 @@ class User implements UserInterface{
             return $return;
         }
 
-        $validateEmail = $this->validateEmail($email);
-        $validatePassword = $this->validatePassword($password);
-        if ($validateEmail['error'] == 1) {
-            $this->addAttempt();
-            $return['message'] = self::$lang["email_password_invalid"];
-            return $return;
-        }
-        elseif ($validatePassword['error'] == 1) {
-            $this->addAttempt();
-            $return['message'] = self::$lang["email_password_invalid"];
+        $validateInfo = $this->validateEmailPassword($email, $password);
+        if($validateInfo !== false) {
+            $return['message'] = $validateInfo;
             return $return;
         }
 
@@ -172,15 +165,9 @@ class User implements UserInterface{
             return $return;
         }
 
-        $validateEmail = $this->validateEmail($email);
-        if ($validateEmail['error'] == 1) {
-            $return['message'] = $validateEmail['message'];
-            return $return;
-        }
-
-        $validatePassword = $this->validatePassword($password);
-        if ($validatePassword['error'] == 1) {
-            $return['message'] = $validatePassword['message'];
+        $validateInfo = $this->validateEmailPassword($email, $password);
+        if($validateInfo !== false) {
+            $return['message'] = $validateInfo;
             return $return;
         }
 
@@ -264,7 +251,7 @@ class User implements UserInterface{
 
         $validateEmail = $this->validateEmail($email);
         if($validateEmail['error'] == 1){
-            $return['message'] = self::$lang["email_invalid"];
+            $return['message'] = $validateEmail['message'];
             return $return;
         }
 
@@ -723,7 +710,6 @@ class User implements UserInterface{
         }
 
         $validatePassword = $this->validatePassword($password);
-
         if($validatePassword['error'] == 1){
             $return['message'] = $validatePassword['message'];
             return $return;
@@ -901,27 +887,16 @@ class User implements UserInterface{
             $return['message'] = $block_status;
             return $return;
         }
-
-        $validateEmail = $this->validateEmail($email);
-
-        if ($validateEmail['error'] == 1) {
-            $return['message'] = $validateEmail['message'];
-
+        
+        $validateInfo = $this->validateEmailPassword($email, $password);
+        if($validateInfo !== false) {
+            $return['message'] = $validateInfo;
             return $return;
         }
 
         if ($this->isEmailTaken($email)) {
             $this->addAttempt();
             $return['message'] = self::$lang["email_taken"];
-
-            return $return;
-        }
-
-        $validatePassword = $this->validatePassword($password);
-
-        if ($validatePassword['error'] == 1) {
-            $return['message'] = self::$lang["password_notvalid"];
-
             return $return;
         }
 
@@ -929,26 +904,22 @@ class User implements UserInterface{
         if (empty($user)) {
             $this->addAttempt();
             $return['message'] = self::$lang["system_error"] . " #14";
-
             return $return;
         }
 
         if (!password_verify($password, $user['password'])) {
             $this->addAttempt();
             $return['message'] = self::$lang["password_incorrect"];
-
             return $return;
         }
 
         if ($email == $user['email']) {
             $this->addAttempt();
             $return['message'] = self::$lang["newemail_match"];
-
             return $return;
         }
 
-        $query = self::$db->update($this->table_users, array('email' => $email), array('id' => $uid));
-        if($query == 0){
+        if(self::$db->update($this->table_users, array('email' => $email), array('id' => $uid)) === false){
             $return['message'] = self::$lang["system_error"] . " #15";
             return $return;
         }
@@ -990,6 +961,28 @@ class User implements UserInterface{
 
         if ($block_status == "block") {
             return self::$lang["user_blocked"];
+        }
+        return false;
+    }
+    
+    /**
+     * 
+     * @param type $email
+     * @param type $password
+     * @return boolean
+     */
+    protected function validateEmailPassword($email, $password = false){
+        $validateEmail = $this->validateEmail($email);
+        if ($validateEmail['error'] == 1) {
+            $this->addAttempt();
+            $return['message'] = self::$lang["email_password_invalid"];
+            return $return;
+        }
+        $validatePassword = $this->validatePassword($password);
+        if ($validatePassword['error'] == 1) {
+            $this->addAttempt();
+            $return['message'] = self::$lang["email_password_invalid"];
+            return $return;
         }
         return false;
     }
