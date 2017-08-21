@@ -18,7 +18,7 @@ class User implements UserInterface{
     protected $userID;
     protected $userInfo;
     
-    protected $storageType = 'database';
+    //protected $storageType = 'database'; // Not yet implemented
     
     protected $table_users = 'users';
     protected $table_sessions = 'sessions';
@@ -61,10 +61,20 @@ class User implements UserInterface{
         date_default_timezone_set($this->site_timezone);
     }
     
+    /**
+     * Getter Will retrieve set variables
+     * @param string $name This should be the string value name
+     * @return mixed This will be the string value if it exists
+     */
     public function __get($name) {
         return $this->$name;
     }
     
+    /**
+     * Setter Will set class variables
+     * @param string $name This should be the variable name
+     * @param mixed $value This should be the variable value you wish to set it to
+     */
     public function __set($name, $value) {
         if(defined($this->$name)){
             $this->$name = $value;
@@ -1151,7 +1161,7 @@ class User implements UserInterface{
     
     /**
      * Gets the users unique ID which has been assigned in the database
-     * @return int This should be the users unique ID
+     * @return int|false This should be the users unique ID if logged in else will be false
      */
     public function getUserID(){
         if(is_int($this->userID)){
