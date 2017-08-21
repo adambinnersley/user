@@ -18,8 +18,6 @@ class User implements UserInterface{
     protected $userID;
     protected $userInfo;
     
-    //protected $storageType = 'database'; // Not yet implemented
-    
     protected $table_users = 'users';
     protected $table_sessions = 'sessions';
     protected $table_requests = 'requests';
@@ -85,7 +83,7 @@ class User implements UserInterface{
      * Logs a user in
      * @param string $email
      * @param string $password
-     * @param int|boolean $remember
+     * @param boolean $remember
      * @param string $captcha = NULL
      * @return array $return
      */
@@ -116,11 +114,6 @@ class User implements UserInterface{
         elseif ($validatePassword['error'] == 1) {
             $this->addAttempt();
             $return['message'] = self::$lang["email_password_invalid"];
-            return $return;
-        }
-        elseif ($remember != 0 && $remember != 1) {
-            $this->addAttempt();
-            $return['message'] = self::$lang["remember_me_invalid"];
             return $return;
         }
 
@@ -352,7 +345,7 @@ class User implements UserInterface{
     /**
     * Creates a session for a specified user id
     * @param int $uid
-    * @param int|boolean $remember
+    * @param boolean $remember
     * @return array $data
     */
     protected function addSession($uid, $remember){
