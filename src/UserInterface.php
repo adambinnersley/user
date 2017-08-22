@@ -1,8 +1,10 @@
 <?php
 namespace UserAuth;
 
+use DBAL\Database;
+
 interface UserInterface{
-    public function __construct($db, $config, $language = "en_GB");
+    public function __construct(Database $db, $language = "en_GB");
     public function login($email, $password, $remember = 0, $captcha = NULL);
     public function register($email, $password, $repeatpassword, $params = array(), $captcha = NULL, $sendmail = NULL);
     public function activate($key);
@@ -10,8 +12,6 @@ interface UserInterface{
     public function logout($hash);
     public function getHash($password);
     public function getUID($email);
-    public function addSession($uid, $remember);
-    public function checkSession($hash);
     public function getSessionUID($hash);
     public function isEmailTaken($email);
     public function getUser($uid);
@@ -25,7 +25,7 @@ interface UserInterface{
     public function deleteUser($uid, $password, $captcha = NULL);
     public function getRequest($key, $type);
     public function resetPass($key, $password, $repeatpassword, $captcha = NULL);
-    public function resendActivation($email, $sendmail = NULL);
+    public function resendActivation($email);
     public function changePassword($uid, $currpass, $newpass, $repeatnewpass, $captcha = NULL);
     public function changeEmail($uid, $email, $password, $captcha = NULL);
     public function isBlocked();
