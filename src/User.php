@@ -5,7 +5,6 @@
  * @version 1.0.0
  * @requires PHP 5.4.0 or greater
  */
-
 namespace UserAuth;
 
 use DBAL\Database;
@@ -44,6 +43,9 @@ class User implements UserInterface{
     
     protected $send_activation_email = true;
     protected $send_reset_email = true;
+    
+    protected $emailFrom = 'user@example.com';
+    protected $emailFromName = 'User Account';
 
     /**
      * Initiates essential objects
@@ -110,14 +112,14 @@ class User implements UserInterface{
             return $return;
         }
 
-        if ($user['isactive'] != 1) {
+        if ($user['isactive'] !== 1) {
             $this->addAttempt();
             $return['message'] = self::$lang["account_inactive"];
             return $return;
         }
         
         $sessiondata = $this->addSession($user['uid'], $remember);
-        if ($sessiondata == false) {
+        if ($sessiondata === false) {
             $return['message'] = self::$lang["system_error"] . " #01";
             return $return;
         }
@@ -335,7 +337,7 @@ class User implements UserInterface{
         $data = array();
         $data['hash'] = sha1(SITE_KEY . microtime());
         $this->deleteExistingSessions($uid);
-        if($remember == true){
+        if($remember === true){
             $data['expire'] = date("Y-m-d H:i:s", strtotime($this->cookie_remember));
             $data['expiretime'] = strtotime($data['expire']);
         }
@@ -585,14 +587,18 @@ class User implements UserInterface{
                     $email,
                     sprintf(self::$lang['email_activation_subject'], SITE_NAME),
                     sprintf(self::$lang['email_activation_body'], SITE_URL, $this->activation_page, $key),
-                    sprintf(self::$lang['email_activation_altbody'], SITE_URL, $this->activation_page, $key)
+                    sprintf(self::$lang['email_activation_altbody'], SITE_URL, $this->activation_page, $key),
+                    $this->emailFrom,
+                    $this->emailFromName
                 );
             }else{
                 $mailsent = sendEmail(
                     $email,
                     sprintf(self::$lang['email_reset_subject'], SITE_NAME),
                     sprintf(self::$lang['email_reset_body'], SITE_URL, $this->password_reset_page, $key),
-                    sprintf(self::$lang['email_reset_altbody'], SITE_URL, $this->password_reset_page, $key)
+                    sprintf(self::$lang['email_reset_altbody'], SITE_URL, $this->password_reset_page, $key),
+                    $this->emailFrom,
+                    $this->emailFromName
                 );
             }
             if(!$mailsent){
