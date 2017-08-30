@@ -543,7 +543,7 @@ class User implements UserInterface{
     * @param int $uid
     * @param string $email
     * @param string $type
-    * @param boolean $sendmail = NULL
+    * @param boolean|null $sendmail = NULL
     * @return boolean
     */
     protected function addRequest($uid, $email, $type, &$sendmail){
@@ -586,23 +586,9 @@ class User implements UserInterface{
 
         if($sendmail === true){
             if($type == "activation"){
-                $mailsent = sendEmail(
-                    $email,
-                    sprintf(self::$lang['email_activation_subject'], SITE_NAME),
-                    sprintf(self::$lang['email_activation_body'], SITE_URL, $this->activation_page, $key),
-                    sprintf(self::$lang['email_activation_altbody'], SITE_URL, $this->activation_page, $key),
-                    $this->emailFrom,
-                    $this->emailFromName
-                );
+                $mailsent = sendEmail($email, sprintf(self::$lang['email_activation_subject'], SITE_NAME), sprintf(self::$lang['email_activation_body'], SITE_URL, $this->activation_page, $key), sprintf(self::$lang['email_activation_altbody'], SITE_URL, $this->activation_page, $key), $this->emailFrom, $this->emailFromName);
             }else{
-                $mailsent = sendEmail(
-                    $email,
-                    sprintf(self::$lang['email_reset_subject'], SITE_NAME),
-                    sprintf(self::$lang['email_reset_body'], SITE_URL, $this->password_reset_page, $key),
-                    sprintf(self::$lang['email_reset_altbody'], SITE_URL, $this->password_reset_page, $key),
-                    $this->emailFrom,
-                    $this->emailFromName
-                );
+                $mailsent = sendEmail($email, sprintf(self::$lang['email_reset_subject'], SITE_NAME), sprintf(self::$lang['email_reset_body'], SITE_URL, $this->password_reset_page, $key), sprintf(self::$lang['email_reset_altbody'], SITE_URL, $this->password_reset_page, $key), $this->emailFrom, $this->emailFromName);
             }
             if(!$mailsent){
                 $this->deleteRequest(self::$db->lastInsertId());
