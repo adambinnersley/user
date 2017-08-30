@@ -1122,18 +1122,6 @@ class User implements UserInterface{
     }
     
     /**
-     * Add ability to set the user ID so that users can be emulated if needed
-     * @param int $userID This should be the ID of the user you want to set the user ID to
-     * @return $this
-     */
-    public function setUserID($userID){
-        if(is_int($userID)){
-            $this->userID = $userID;
-        }
-        return $this;
-    }
-    
-    /**
      * Gets the users unique ID which has been assigned in the database
      * @return int|false This should be the users unique ID if logged in else will be false
      */
