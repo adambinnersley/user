@@ -852,13 +852,6 @@ class User implements UserInterface{
             return $return;
         }
 
-        $validatePassword = $this->validatePassword($currpass);
-        if($validatePassword['error'] == 1){
-            $this->addAttempt();
-            $return['message'] = $validatePassword['message'];
-            return $return;
-        }
-
         $validatePassword = $this->validatePassword($newpass);
         if($validatePassword['error'] == 1){
             $return['message'] = $validatePassword['message'];
@@ -869,9 +862,9 @@ class User implements UserInterface{
             return $return;
         }
 
-        $strength = new PasswordStrength();
-        if($strength->passwordStrength($newpass)['score'] < intval($this->password_min_score)){
-            $return['message'] = self::$lang['password_weak'];
+        $strength = $this->minPasswordStrength($newpass);
+        if($strength !== false){
+            $return['message'] = $strength['message'];
             return $return;
         }
 
