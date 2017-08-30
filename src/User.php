@@ -480,17 +480,20 @@ class User implements UserInterface{
     
     /**
     * Gets public user data for a given UID and returns an array, password is not returned
-    * @param int $uid
-    * @return array|false $data
+    * @param int|false $uid This should be the user ID of the person you are getting the information for
+    * @return array|false If information exists for the user will return an array else will return false
     */
     public function getUser($uid){
-        $data = self::$db->select($this->table_users, array('id' => $uid));
-        if(empty($data)){
-            return false;
+        if(is_integer($uid)){
+            $data = self::$db->select($this->table_users, array('id' => $uid));
+            if(empty($data)){
+                return false;
+            }
+            $data['uid'] = $uid;
+            unset($data['password']);
+            return $data;
         }
-        $data['uid'] = $uid;
-        unset($data['password']);
-        return $data;
+        return false;
     }
     
     /**
