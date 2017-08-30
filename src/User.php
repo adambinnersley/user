@@ -182,9 +182,9 @@ class User implements UserInterface{
             return $return;
         }
 
-        $strength = new PasswordStrength();
-        if ($strength->passwordStrength($password)['score'] < intval($this->password_min_score)) {
-            $return['message'] = self::$lang['password_weak'];
+        $strength = $this->minPasswordStrength($password);
+        if($strength !== false){
+            $return['message'] = $strength['message'];
             return $return;
         }
 
@@ -669,6 +669,21 @@ class User implements UserInterface{
     }
     
     /**
+     * checks to see if the given password meets the minimum strength requirements
+     * @param string $password This should be the password you are checking for strength
+     * @return array|boolean If the password doe not meet the minimum requirements will return an array containing the error message else will return false
+     */
+    protected function minPasswordStrength($password){
+        $return = array();
+        $strength = new PasswordStrength();
+        if($strength->passwordStrength($password)['score'] < intval($this->password_min_score)){
+            $return['message'] = self::$lang['password_weak'];
+            return $return;
+        }
+        return false;
+    }
+    
+    /**
     * Verifies that an email is valid
     * @param string $email
     * @return array $return
@@ -735,9 +750,9 @@ class User implements UserInterface{
             return $return;
         }
 
-        $strength = new PasswordStrength();
-        if($strength->passwordStrength($password)['score'] < intval($this->password_min_score)){
-            $return['message'] = self::$lang['password_weak'];
+        $strength = $this->minPasswordStrength($password);
+        if($strength !== false){
+            $return['message'] = $strength['message'];
             return $return;
         }
 	    
