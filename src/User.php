@@ -34,7 +34,7 @@ class User implements UserInterface{
     
     public $cookie_name = 'authID';
     public $cookie_forget = '+30 minutes';
-    public $cookie_remember = 31536000;
+    public $cookie_remember = '+1 year';
     
     protected $password_cost = 11;
     protected $password_min_score = 3;
@@ -358,10 +358,8 @@ class User implements UserInterface{
             return false;
         }
         
-        setcookie($this->cookie_name, $data['hash'], $data['expire'], '/');
-        $_COOKIE[$this->cookie_name] = $data['hash'];
-
-        $data['expire'] = strtotime($data['expire']);
+        setcookie($this->cookie_name, $data['hash'], strtotime($data['expire']), '/');
+        
         return $data;
     }
     
