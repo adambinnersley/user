@@ -106,7 +106,7 @@ class User implements UserInterface{
         }
 
         $user = $this->checkUsernamePassword($email, $password);
-        if (!$user) {
+        if (empty($user)) {
             $this->addAttempt();
             $return['message'] = self::$lang["email_password_incorrect"];
             return $return;
@@ -139,7 +139,15 @@ class User implements UserInterface{
      * @return array|false If the information is correct the users information will be returned else will return false
      */
     protected function checkUsernamePassword($username, $password) {
-        return self::$db->select($this->table_users, array('email' => strtolower($username), 'password' => $this->getHash($password)));
+        $data = self::$db->select($this->table_users, array('email' => strtolower($username)));
+        if(empty($data)){
+            return false;
+        }
+        if(password_verify($password, $data['password']) === true){
+            unset($data['password']);
+            return $data;
+        }
+        return false;
     }
     
     /**
