@@ -112,7 +112,7 @@ class User implements UserInterface{
             return $return;
         }
 
-        if ($user['isactive'] !== 1) {
+        if ($user['isactive'] != 1) {
             $this->addAttempt();
             $return['message'] = self::$lang["account_inactive"];
             return $return;
