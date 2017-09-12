@@ -358,7 +358,7 @@ class User implements UserInterface{
             return false;
         }
         
-        setcookie($this->cookie_name, $data['hash'], $data['expire'], '/', '', true);
+        setcookie($this->cookie_name, $data['hash'], $data['expire'], '/');
         $_COOKIE[$this->cookie_name] = $data['hash'];
 
         $data['expire'] = strtotime($data['expire']);
