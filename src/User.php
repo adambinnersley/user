@@ -32,9 +32,9 @@ class User implements UserInterface{
     
     public $site_timezone = 'Europe/London';
     
-    protected $cookie_name = 'authID';
-    protected $cookie_forget = '+30 minutes';
-    protected $cookie_remember = 31536000;
+    public $cookie_name = 'authID';
+    public $cookie_forget = '+30 minutes';
+    public $cookie_remember = 31536000;
     
     protected $password_cost = 11;
     protected $password_min_score = 3;
@@ -357,6 +357,9 @@ class User implements UserInterface{
         if(!self::$db->insert($this->table_sessions, array('uid' => $uid, 'hash' => $data['hash'], 'expiredate' => $data['expire'], 'ip' => $this->getIp(), 'agent' => (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''), 'cookie_crc' => sha1($data['hash'] . SITE_KEY)))){
             return false;
         }
+        
+        setcookie($this->cookie_name, $data['hash'], $data['expire'], '/', '', true);
+        $_COOKIE[$this->cookie_name] = $data['hash'];
 
         $data['expire'] = strtotime($data['expire']);
         return $data;
