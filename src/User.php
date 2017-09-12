@@ -30,7 +30,7 @@ class User implements UserInterface{
     protected $attempts_before_verify = 5;
     protected $use_banlist = true;
     
-    protected $site_timezone = 'Europe/London';
+    public $site_timezone = 'Europe/London';
     
     protected $cookie_name = 'authID';
     protected $cookie_forget = '+30 minutes';
@@ -41,11 +41,11 @@ class User implements UserInterface{
     
     protected $request_key_expiration = '+10 minutes';
     
-    protected $send_activation_email = true;
-    protected $send_reset_email = true;
+    public $send_activation_email = true;
+    public $send_reset_email = true;
     
-    protected $emailFrom = 'user@example.com';
-    protected $emailFromName = 'User Account';
+    public $emailFrom = 'user@example.com';
+    public $emailFromName = 'User Account';
 
     /**
      * Initiates essential objects
@@ -112,13 +112,13 @@ class User implements UserInterface{
             return $return;
         }
 
-        if ($user['isactive'] !== 1 && $this->send_activation_email === true) {
+        if ($user['isactive'] !== 1) {
             $this->addAttempt();
             $return['message'] = self::$lang["account_inactive"];
             return $return;
         }
         
-        $sessiondata = $this->addSession($user['uid'], $remember);
+        $sessiondata = $this->addSession($user['id'], $remember);
         if ($sessiondata === false) {
             $return['message'] = self::$lang["system_error"] . " #01";
             return $return;
@@ -446,7 +446,7 @@ class User implements UserInterface{
     * @param string $password   -- password
     * @param array $params      -- additional params
     * @param boolean|null $sendmail
-    * @return int $uid
+    * @return int|array 
     */
     protected function addUser($email, $password, $params = array(), &$sendmail){
         $return = array();
