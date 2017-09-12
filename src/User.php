@@ -1131,7 +1131,7 @@ class User implements UserInterface{
     
     /**
      * Gets the users unique ID which has been assigned in the database
-     * @return int|false This should be the users unique ID if logged in else will be false
+     * @return int This should be the users unique ID if logged in else will be 0
      */
     public function getUserID(){
         if(is_int($this->userID)){
@@ -1141,7 +1141,7 @@ class User implements UserInterface{
             $this->userID = intval($this->getSessionUID($this->getSessionHash()));
             return $this->userID;
         }
-        return false;
+        return 0;
     }
     
     /**
