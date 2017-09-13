@@ -20,8 +20,6 @@ interface UserInterface{
     public function getUserInfo();
     public function getFirstname();
     public function getLastname();
-    public function getUserSettings();
-    public function setUserSettings($vars);
     public function deleteUser($uid, $password, $captcha = NULL);
     public function getRequest($key, $type);
     public function resetPass($key, $password, $repeatpassword, $captcha = NULL);
