@@ -1186,6 +1186,7 @@ class User implements UserInterface{
      * @return array 
      */
     public function getUserSettings($userID = false){
+        if($userID === false){$userID = $this->getUserID();}
         $this->getUserInfo($userID);
         return unserialize($this->userInfo['settings']);
     }
@@ -1197,6 +1198,7 @@ class User implements UserInterface{
      * @return boolean If the settings are updated successfully will return true else returns false
      */
     public function setUserSettings($vars, $userID = false){
+        if($userID === false){$userID = $this->getUserID();}
         if(is_array($vars)){
             return self::$db->update($this->table_users, array('settings' => serialize(array_filter($vars))), array('id' => $userID), 1);
         }
