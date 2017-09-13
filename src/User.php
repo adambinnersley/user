@@ -1179,29 +1179,4 @@ class User implements UserInterface{
         if(!isset($this->userInfo)){$this->getUserInfo();}
         return $this->userInfo['last_name'];
     }
-    
-    /**
-     * Returns any stored settings from the database that the user may have
-     * @param int|false $userID If you wish to get settings for a specific user set this here else to get settings for current user leave this blank or set to false
-     * @return array 
-     */
-    public function getUserSettings($userID = false){
-        if($userID === false){$userID = $this->getUserID();}
-        $this->getUserInfo($userID);
-        return unserialize($this->userInfo['settings']);
-    }
-    
-    /**
-     * Sets the stored settings in the database for the given user
-     * @param array $vars This should be an array of any settings you wish to add the the user
-     * @param int $userID This should be the user ID that you are applying the settings update to
-     * @return boolean If the settings are updated successfully will return true else returns false
-     */
-    public function setUserSettings($vars, $userID = false){
-        if($userID === false){$userID = $this->getUserID();}
-        if(is_array($vars)){
-            return self::$db->update($this->table_users, array('settings' => serialize(array_filter($vars))), array('id' => $userID), 1);
-        }
-        return false;
-    }
 }
