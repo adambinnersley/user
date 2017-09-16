@@ -12,7 +12,7 @@ use ZxcvbnPhp\Zxcvbn as PasswordStrength;
 
 class User implements UserInterface{
     protected static $db;
-    protected static $lang;
+    public $lang;
     
     protected $userID;
     protected $userInfo;
@@ -56,7 +56,7 @@ class User implements UserInterface{
         self::$db = $db;
         
         require "languages/{$language}.php";
-        self::$lang = $lang;
+        $this->lang = $lang;
 
         date_default_timezone_set($this->site_timezone);
     }
@@ -108,24 +108,24 @@ class User implements UserInterface{
         $user = $this->checkUsernamePassword($email, $password);
         if (empty($user)) {
             $this->addAttempt();
-            $return['message'] = self::$lang["email_password_incorrect"];
+            $return['message'] = $this->lang["email_password_incorrect"];
             return $return;
         }
 
         if ($user['isactive'] != 1) {
             $this->addAttempt();
-            $return['message'] = self::$lang["account_inactive"];
+            $return['message'] = $this->lang["account_inactive"];
             return $return;
         }
         
         $sessiondata = $this->addSession($user['id'], $remember);
         if ($sessiondata === false) {
-            $return['message'] = self::$lang["system_error"] . " #01";
+            $return['message'] = $this->lang["system_error"] . " #01";
             return $return;
         }
 
         $return['error'] = false;
-        $return['message'] = self::$lang["logged_in"];
+        $return['message'] = $this->lang["logged_in"];
         $return['hash'] = $sessiondata['hash'];
         $return['expire'] = $sessiondata['expiretime'];
         $return['cookie_name'] = $this->cookie_name;
@@ -180,7 +180,7 @@ class User implements UserInterface{
         }
 
         if ($password !== $repeatpassword) {
-            $return['message'] = self::$lang["password_nomatch"];
+            $return['message'] = $this->lang["password_nomatch"];
             return $return;
         }
 
@@ -198,7 +198,7 @@ class User implements UserInterface{
 
         if ($this->isEmailTaken($email)) {
             $this->addAttempt();
-            $return['message'] = self::$lang["email_taken"];
+            $return['message'] = $this->lang["email_taken"];
             return $return;
         }
 
@@ -209,7 +209,7 @@ class User implements UserInterface{
         }
 
         $return['error'] = false;
-        $return['message'] = ($sendmail === true ? self::$lang["register_success"] : self::$lang['register_success_emailmessage_suppressed']);
+        $return['message'] = ($sendmail === true ? $this->lang["register_success"] : $this->lang['register_success_emailmessage_suppressed']);
         return $return;
     }
     
@@ -222,13 +222,13 @@ class User implements UserInterface{
         $return = array();
         $return['error'] = true;
         if($this->isBlocked() == "block"){
-            $return['message'] = self::$lang["user_blocked"];
+            $return['message'] = $this->lang["user_blocked"];
 
             return $return;
         }
         if(strlen($key) !== 20){
             $this->addAttempt();
-            $return['message'] = self::$lang["activationkey_invalid"];
+            $return['message'] = $this->lang["activationkey_invalid"];
             return $return;
         }
 
@@ -241,7 +241,7 @@ class User implements UserInterface{
         if($this->getBaseUser($request['uid'])['isactive'] == 1){
             $this->addAttempt();
             $this->deleteRequest($request['id']);
-            $return['message'] = self::$lang["system_error"] . " #02";
+            $return['message'] = $this->lang["system_error"] . " #02";
             return $return;
         }
         
@@ -249,7 +249,7 @@ class User implements UserInterface{
         $this->deleteRequest($request['id']);
 
         $return['error'] = false;
-        $return['message'] = self::$lang["account_activated"];
+        $return['message'] = $this->lang["account_activated"];
 
         return $return;
     }
@@ -264,7 +264,7 @@ class User implements UserInterface{
         $return['error'] = true;
 
         if($this->isBlocked() == "block"){
-            $return['message'] = self::$lang["user_blocked"];
+            $return['message'] = $this->lang["user_blocked"];
             return $return;
         }
 
@@ -277,7 +277,7 @@ class User implements UserInterface{
         $row = $this->checkEmailExists($email);
 	if(empty($row)){
             $this->addAttempt();
-            $return['message'] = self::$lang["email_incorrect"];
+            $return['message'] = $this->lang["email_incorrect"];
             return $return;
         }
 
@@ -289,7 +289,7 @@ class User implements UserInterface{
         }
 
         $return['error'] = false;
-        $return['message'] = ($sendmail === true ? self::$lang["reset_requested"] : self::$lang['reset_requested_emailmessage_suppressed']);
+        $return['message'] = ($sendmail === true ? $this->lang["reset_requested"] : $this->lang['reset_requested_emailmessage_suppressed']);
         return $return;
     }
     
@@ -461,7 +461,7 @@ class User implements UserInterface{
         else{$setParams = $requiredParams;}
 
         if(!self::$db->insert($this->table_users, $setParams)){
-            $return['message'] = self::$lang["system_error"] . " #03";
+            $return['message'] = $this->lang["system_error"] . " #03";
             return $return;
         }
         elseif($sendmail){
@@ -532,17 +532,17 @@ class User implements UserInterface{
         $user = $this->getBaseUser($uid);
         if(!password_verify($password, $user['password'])){
             $this->addAttempt();
-            $return['message'] = self::$lang["password_incorrect"];
+            $return['message'] = $this->lang["password_incorrect"];
             return $return;
         }
 
         if(!self::$db->delete($this->table_users, array('id' => $uid)) || !self::$db->delete($this->table_sessions, array('uid' => $uid)) || !self::$db->delete($this->table_requests, array('uid' => $uid))){
-            $return['message'] = self::$lang["system_error"] . " #05";
+            $return['message'] = $this->lang["system_error"] . " #05";
             return $return;
         }
 
         $return['error'] = false;
-        $return['message'] = self::$lang["account_deleted"];
+        $return['message'] = $this->lang["account_deleted"];
 
         return $return;
     }
@@ -560,7 +560,7 @@ class User implements UserInterface{
         $return['error'] = true;
 
         if($type != "activation" && $type != "reset"){
-            $return['message'] = self::$lang["system_error"] . " #08";
+            $return['message'] = $this->lang["system_error"] . " #08";
             return $return;
         }
 
@@ -576,32 +576,32 @@ class User implements UserInterface{
         $row = self::$db->select($this->table_requests, array('uid' => $uid, 'type' => $type), array('id', 'expire'));
         if(!empty($row)){
             if(strtotime(date("Y-m-d H:i:s")) < strtotime($row['expire'])){
-                $return['message'] = self::$lang["reset_exists"];
+                $return['message'] = $this->lang["reset_exists"];
                 return $return;
             }
             $this->deleteRequest($row['id']);
         }
 
         if($type == "activation" && $this->getBaseUser($uid)['isactive'] == 1){
-            $return['message'] = self::$lang["already_activated"];
+            $return['message'] = $this->lang["already_activated"];
             return $return;
         }
         
         $key = $this->getRandomKey(20);
         if(!self::$db->insert($this->table_requests, array('uid' => $uid, 'rkey' => $key, 'expire' => date("Y-m-d H:i:s", strtotime($this->request_key_expiration)), 'type' => $type))){
-            $return['message'] = self::$lang["system_error"] . " #09";
+            $return['message'] = $this->lang["system_error"] . " #09";
             return $return;
         }
 
         if($sendmail === true){
             if($type == "activation"){
-                $mailsent = sendEmail($email, sprintf(self::$lang['email_activation_subject'], SITE_NAME), sprintf(self::$lang['email_activation_body'], SITE_URL, $this->activation_page, $key), sprintf(self::$lang['email_activation_altbody'], SITE_URL, $this->activation_page, $key), $this->emailFrom, $this->emailFromName);
+                $mailsent = sendEmail($email, sprintf($this->lang['email_activation_subject'], SITE_NAME), sprintf($this->lang['email_activation_body'], SITE_URL, $this->activation_page, $key), sprintf($this->lang['email_activation_altbody'], SITE_URL, $this->activation_page, $key), $this->emailFrom, $this->emailFromName);
             }else{
-                $mailsent = sendEmail($email, sprintf(self::$lang['email_reset_subject'], SITE_NAME), sprintf(self::$lang['email_reset_body'], SITE_URL, $this->password_reset_page, $key), sprintf(self::$lang['email_reset_altbody'], SITE_URL, $this->password_reset_page, $key), $this->emailFrom, $this->emailFromName);
+                $mailsent = sendEmail($email, sprintf($this->lang['email_reset_subject'], SITE_NAME), sprintf($this->lang['email_reset_body'], SITE_URL, $this->password_reset_page, $key), sprintf($this->lang['email_reset_altbody'], SITE_URL, $this->password_reset_page, $key), $this->emailFrom, $this->emailFromName);
             }
             if(!$mailsent){
                 $this->deleteRequest(self::$db->lastInsertId());
-                $return['message'] = self::$lang["system_error"] . " #10";
+                $return['message'] = $this->lang["system_error"] . " #10";
                 return $return;
             }
         }
@@ -623,14 +623,14 @@ class User implements UserInterface{
         $request = self::$db->select($this->table_requests, array('rkey' => $key, 'type' => $type), array('id', 'uid', 'expire'));
         if(empty($request)){
             $this->addAttempt();
-            $return['message'] = self::$lang[$type."key_incorrect"];
+            $return['message'] = $this->lang[$type."key_incorrect"];
             return $request;
         }
         
         if(strtotime(date("Y-m-d H:i:s")) > strtotime($request['expire'])){
             $this->addAttempt();
             $this->deleteRequest($request['id']);
-            $return['message'] = self::$lang[$type."key_expired"];
+            $return['message'] = $this->lang[$type."key_expired"];
             return $request;
         }
         
@@ -658,7 +658,7 @@ class User implements UserInterface{
         $return = array();
         $return['error'] = true;
         if(strlen($password) < 5){
-            $return['message'] = self::$lang["password_short"];
+            $return['message'] = $this->lang["password_short"];
             return $return;
         }
 
@@ -675,7 +675,7 @@ class User implements UserInterface{
         $return = array();
         $strength = new PasswordStrength();
         if($strength->passwordStrength($password)['score'] < intval($this->password_min_score)){
-            $return['message'] = self::$lang['password_weak'];
+            $return['message'] = $this->lang['password_weak'];
             return $return;
         }
         return false;
@@ -691,13 +691,13 @@ class User implements UserInterface{
         $return['error'] = true;
 
         if(strlen($email) < 5){
-            $return['message'] = self::$lang["email_short"];
+            $return['message'] = $this->lang["email_short"];
             return $return;
         }elseif(strlen($email) > 100){
-            $return['message'] = self::$lang["email_long"];
+            $return['message'] = $this->lang["email_long"];
             return $return;
         }elseif(!filter_var($email, FILTER_VALIDATE_EMAIL)){
-            $return['message'] = self::$lang["email_invalid"];
+            $return['message'] = $this->lang["email_invalid"];
             return $return;
         }
 
@@ -705,7 +705,7 @@ class User implements UserInterface{
             $bannedEmails = json_decode(file_get_contents(__DIR__ . "/files/domains.json"));
 
             if(in_array(strtolower(explode('@', $email)[1]), $bannedEmails)){
-                $return['message'] = self::$lang["email_banned"];
+                $return['message'] = $this->lang["email_banned"];
                 return $return;
             }
         }
@@ -733,7 +733,7 @@ class User implements UserInterface{
         }
 
         if(strlen($key) != 20){
-            $return['message'] = self::$lang["resetkey_invalid"];
+            $return['message'] = $this->lang["resetkey_invalid"];
             return $return;
         }
 
@@ -744,7 +744,7 @@ class User implements UserInterface{
         }
 
         if($password !== $repeatpassword){
-            $return['message'] = self::$lang["newpassword_nomatch"];
+            $return['message'] = $this->lang["newpassword_nomatch"];
             return $return;
         }
 
@@ -764,25 +764,25 @@ class User implements UserInterface{
         if(!$user){
             $this->addAttempt();
             $this->deleteRequest($data['id']);
-            $return['message'] = self::$lang["system_error"] . " #11";
+            $return['message'] = $this->lang["system_error"] . " #11";
 
             return $return;
         }
 
         if(password_verify($password, $user['password'])){
             $this->addAttempt();
-            $return['message'] = self::$lang["newpassword_match"];
+            $return['message'] = $this->lang["newpassword_match"];
             return $return;
         }
 
         if(self::$db->update($this->table_users, array('password' => $this->getHash($password)), array('id' => $data['uid'])) === false){
-            $return['message'] = self::$lang["system_error"] . " #12";
+            $return['message'] = $this->lang["system_error"] . " #12";
             return $return;
         }
 
         $this->deleteRequest($data['id']);
         $return['error'] = false;
-        $return['message'] = self::$lang["password_reset"];
+        $return['message'] = $this->lang["password_reset"];
         return $return;
     }
     
@@ -796,7 +796,7 @@ class User implements UserInterface{
         $return['error'] = true;
 
         if($this->isBlocked() == "block"){
-            $return['message'] = self::$lang["user_blocked"];
+            $return['message'] = $this->lang["user_blocked"];
             return $return;
         }
 
@@ -809,13 +809,13 @@ class User implements UserInterface{
         $row = $this->checkEmailExists($email);
         if(empty($row)){
             $this->addAttempt();
-            $return['message'] = self::$lang["email_incorrect"];
+            $return['message'] = $this->lang["email_incorrect"];
             return $return;
         }
 
         if($this->getBaseUser($row['id'])['isactive'] == 1){
             $this->addAttempt();
-            $return['message'] = self::$lang["already_activated"];
+            $return['message'] = $this->lang["already_activated"];
             return $return;
         }
 
@@ -827,7 +827,7 @@ class User implements UserInterface{
         }
 
         $return['error'] = false;
-        $return['message'] = self::$lang["activation_sent"];
+        $return['message'] = $this->lang["activation_sent"];
         return $return;
     }
     
@@ -856,7 +856,7 @@ class User implements UserInterface{
             return $return;
         }
         elseif($newpass !== $repeatnewpass){
-            $return['message'] = self::$lang["newpassword_nomatch"];
+            $return['message'] = $this->lang["newpassword_nomatch"];
             return $return;
         }
 
@@ -869,19 +869,19 @@ class User implements UserInterface{
         $user = $this->getBaseUser($uid);
         if(empty($user)){
             $this->addAttempt();
-            $return['message'] = self::$lang["system_error"] . " #13";
+            $return['message'] = $this->lang["system_error"] . " #13";
             return $return;
         }
 
         if(!password_verify($currpass, $user['password'])){
             $this->addAttempt();
-            $return['message'] = self::$lang["password_incorrect"];
+            $return['message'] = $this->lang["password_incorrect"];
             return $return;
         }
 
         self::$db->update($this->table_users, array('password' => $this->getHash($newpass)), array('id' => $uid));
         $return['error'] = false;
-        $return['message'] = self::$lang["password_changed"];
+        $return['message'] = $this->lang["password_changed"];
         return $return;
     }
     
@@ -911,36 +911,36 @@ class User implements UserInterface{
 
         if ($this->isEmailTaken($email)) {
             $this->addAttempt();
-            $return['message'] = self::$lang["email_taken"];
+            $return['message'] = $this->lang["email_taken"];
             return $return;
         }
 
         $user = $this->getBaseUser($uid);
         if (empty($user)) {
             $this->addAttempt();
-            $return['message'] = self::$lang["system_error"] . " #14";
+            $return['message'] = $this->lang["system_error"] . " #14";
             return $return;
         }
 
         if (!password_verify($password, $user['password'])) {
             $this->addAttempt();
-            $return['message'] = self::$lang["password_incorrect"];
+            $return['message'] = $this->lang["password_incorrect"];
             return $return;
         }
 
         if ($email == $user['email']) {
             $this->addAttempt();
-            $return['message'] = self::$lang["newemail_match"];
+            $return['message'] = $this->lang["newemail_match"];
             return $return;
         }
 
         if(self::$db->update($this->table_users, array('email' => $email), array('id' => $uid)) === false){
-            $return['message'] = self::$lang["system_error"] . " #15";
+            $return['message'] = $this->lang["system_error"] . " #15";
             return $return;
         }
 
         $return['error'] = false;
-        $return['message'] = self::$lang["email_changed"];
+        $return['message'] = $this->lang["email_changed"];
         return $return;
     }
     
@@ -970,12 +970,12 @@ class User implements UserInterface{
         $block_status = $this->isBlocked();
         if ($block_status == "verify") {
             if ($this->checkCaptcha($captcha) === false) {
-                return self::$lang["user_verify_failed"];
+                return $this->lang["user_verify_failed"];
             }
         }
 
         if ($block_status == "block") {
-            return self::$lang["user_blocked"];
+            return $this->lang["user_blocked"];
         }
         return false;
     }
@@ -990,12 +990,12 @@ class User implements UserInterface{
         $validateEmail = $this->validateEmail($email);
         if ($validateEmail['error'] == 1) {
             $this->addAttempt();
-            return self::$lang["email_password_invalid"];
+            return $this->lang["email_password_invalid"];
         }
         $validatePassword = $this->validatePassword($password);
         if ($validatePassword['error'] == 1) {
             $this->addAttempt();
-            return self::$lang["email_password_invalid"];
+            return $this->lang["email_password_invalid"];
         }
         return false;
     }
