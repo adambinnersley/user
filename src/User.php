@@ -151,12 +151,15 @@ class User implements UserInterface{
     }
     
     /**
-     * 
-     * @param string $email
-     * @return array|false
+     * Check to see if a user with the given email address exists
+     * @param string $email This should be the email address that you wish to check
+     * @return array|false If the users exists the information will be returned else will return false
      */
-    protected function checkEmailExists($email){
-        return self::$db->select($this->table_users, array('email' => $email), array('id'));
+    public function checkEmailExists($email){
+        if(filter_var($email, FILTER_VALIDATE_EMAIL)){
+            return self::$db->select($this->table_users, array('email' => $email), array('id'));
+        }
+        return false;
     }
     
     /**
