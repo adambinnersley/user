@@ -18,8 +18,6 @@ interface UserInterface{
     public function getUserID();
     public function getUserEmail();
     public function getUserInfo();
-    public function getFirstname();
-    public function getLastname();
     public function deleteUser($uid, $password, $captcha = NULL);
     public function getRequest($key, $type);
     public function resetPass($key, $password, $repeatpassword, $captcha = NULL);

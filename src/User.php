@@ -11,7 +11,7 @@ use DBAL\Database;
 use ZxcvbnPhp\Zxcvbn as PasswordStrength;
 
 class User implements UserInterface{
-    protected static $db;
+    protected $db;
     public $lang;
     
     protected $userID;
@@ -50,10 +50,11 @@ class User implements UserInterface{
     /**
      * Initiates essential objects
      * @param Database $db
+     * @param Config $config
      * @param string $language
      */
     public function __construct(Database $db, $language = "en_GB") {
-        self::$db = $db;
+        $this->db = $db;
         
         require "languages/{$language}.php";
         $this->lang = $lang;
@@ -139,7 +140,7 @@ class User implements UserInterface{
      * @return array|false If the information is correct the users information will be returned else will return false
      */
     protected function checkUsernamePassword($username, $password) {
-        $data = self::$db->select($this->table_users, array('email' => strtolower($username)));
+        $data = $this->db->select($this->table_users, array('email' => strtolower($username)));
         if(empty($data)){
             return false;
         }
@@ -157,7 +158,7 @@ class User implements UserInterface{
      */
     public function checkEmailExists($email){
         if(filter_var($email, FILTER_VALIDATE_EMAIL)){
-            return self::$db->select($this->table_users, array('email' => $email), array('id'));
+            return $this->db->select($this->table_users, array('email' => $email), array('id'));
         }
         return false;
     }
@@ -248,7 +249,7 @@ class User implements UserInterface{
             return $return;
         }
         
-        self::$db->update($this->table_users, array('isactive' => 1), array('id' => $request['uid']));
+        $this->db->update($this->table_users, array('isactive' => 1), array('id' => $request['uid']));
         $this->deleteRequest($request['id']);
 
         $return['error'] = false;
@@ -357,7 +358,7 @@ class User implements UserInterface{
             $data['expiretime'] = 0;
         }
 
-        if(!self::$db->insert($this->table_sessions, array('uid' => $uid, 'hash' => $data['hash'], 'expiredate' => $data['expire'], 'ip' => $this->getIp(), 'agent' => (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''), 'cookie_crc' => sha1($data['hash'] . SITE_KEY)))){
+        if(!$this->db->insert($this->table_sessions, array('uid' => $uid, 'hash' => $data['hash'], 'expiredate' => $data['expire'], 'ip' => $this->getIp(), 'agent' => (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''), 'cookie_crc' => sha1($data['hash'] . SITE_KEY)))){
             return false;
         }
         
@@ -372,7 +373,7 @@ class User implements UserInterface{
     * @return boolean
     */
     protected function deleteExistingSessions($uid){
-        return self::$db->delete($this->table_sessions, array('uid' => $uid));
+        return $this->db->delete($this->table_sessions, array('uid' => $uid));
     }
     
     /**
@@ -381,7 +382,7 @@ class User implements UserInterface{
     * @return boolean
     */
     protected function deleteSession($hash){
-        return self::$db->delete($this->table_sessions, array('hash' => $hash));
+        return $this->db->delete($this->table_sessions, array('hash' => $hash));
     }
 
     /**
@@ -398,7 +399,7 @@ class User implements UserInterface{
             return false;
         }
 
-        $row = self::$db->select($this->table_sessions, array('hash' => $hash));
+        $row = $this->db->select($this->table_sessions, array('hash' => $hash));
         if(empty($row)){
             return false;
         }
@@ -425,7 +426,7 @@ class User implements UserInterface{
     * @return int|false
     */
     public function getSessionUID($hash){
-        $row = self::$db->select($this->table_sessions, array('hash' => $hash) , array('uid'));
+        $row = $this->db->select($this->table_sessions, array('hash' => $hash) , array('uid'));
         if(empty($row)){
             return false;
         }
@@ -438,7 +439,7 @@ class User implements UserInterface{
     * @return boolean
     */
     public function isEmailTaken($email){
-        if(self::$db->count($this->table_users, array('email' => $email)) == 0){
+        if($this->db->count($this->table_users, array('email' => $email)) == 0){
             return false;
         }
         return true;
@@ -463,12 +464,12 @@ class User implements UserInterface{
         }
         else{$setParams = $requiredParams;}
 
-        if(!self::$db->insert($this->table_users, $setParams)){
+        if(!$this->db->insert($this->table_users, $setParams)){
             $return['message'] = $this->lang["system_error"] . " #03";
             return $return;
         }
         elseif($sendmail){
-            $this->addRequest(self::$db->lastInsertId(), $email, "activation", $sendmail);
+            $this->addRequest($this->db->lastInsertId(), $email, "activation", $sendmail);
         }
 
         $return['error'] = false;
@@ -481,7 +482,7 @@ class User implements UserInterface{
     * @return array $data
     */
     protected function getBaseUser($uid){
-        $data = self::$db->select($this->table_users, array('id' => $uid), array('email', 'password', 'isactive'));
+        $data = $this->db->select($this->table_users, array('id' => $uid), array('email', 'password', 'isactive'));
         if(empty($data)){
             return false;
         }
@@ -497,7 +498,7 @@ class User implements UserInterface{
     */
     public function getUser($uid){
         if(is_integer($uid)){
-            $data = self::$db->select($this->table_users, array('id' => $uid));
+            $data = $this->db->select($this->table_users, array('id' => $uid));
             if(empty($data)){
                 return false;
             }
@@ -539,7 +540,7 @@ class User implements UserInterface{
             return $return;
         }
 
-        if(!self::$db->delete($this->table_users, array('id' => $uid)) || !self::$db->delete($this->table_sessions, array('uid' => $uid)) || !self::$db->delete($this->table_requests, array('uid' => $uid))){
+        if(!$this->db->delete($this->table_users, array('id' => $uid)) || !$this->db->delete($this->table_sessions, array('uid' => $uid)) || !$this->db->delete($this->table_requests, array('uid' => $uid))){
             $return['message'] = $this->lang["system_error"] . " #05";
             return $return;
         }
@@ -576,7 +577,7 @@ class User implements UserInterface{
             }
         }
 
-        $row = self::$db->select($this->table_requests, array('uid' => $uid, 'type' => $type), array('id', 'expire'));
+        $row = $this->db->select($this->table_requests, array('uid' => $uid, 'type' => $type), array('id', 'expire'));
         if(!empty($row)){
             if(strtotime(date("Y-m-d H:i:s")) < strtotime($row['expire'])){
                 $return['message'] = $this->lang["reset_exists"];
@@ -591,7 +592,7 @@ class User implements UserInterface{
         }
         
         $key = $this->getRandomKey(20);
-        if(!self::$db->insert($this->table_requests, array('uid' => $uid, 'rkey' => $key, 'expire' => date("Y-m-d H:i:s", strtotime($this->request_key_expiration)), 'type' => $type))){
+        if(!$this->db->insert($this->table_requests, array('uid' => $uid, 'rkey' => $key, 'expire' => date("Y-m-d H:i:s", strtotime($this->request_key_expiration)), 'type' => $type))){
             $return['message'] = $this->lang["system_error"] . " #09";
             return $return;
         }
@@ -603,7 +604,7 @@ class User implements UserInterface{
                 $mailsent = sendEmail($email, sprintf($this->lang['email_reset_subject'], SITE_NAME), sprintf($this->lang['email_reset_body'], SITE_URL, $this->password_reset_page, $key), sprintf($this->lang['email_reset_altbody'], SITE_URL, $this->password_reset_page, $key), $this->emailFrom, $this->emailFromName);
             }
             if(!$mailsent){
-                $this->deleteRequest(self::$db->lastInsertId());
+                $this->deleteRequest($this->db->lastInsertId());
                 $return['message'] = $this->lang["system_error"] . " #10";
                 return $return;
             }
@@ -623,7 +624,7 @@ class User implements UserInterface{
         $return = array();
         $return['error'] = true;
         
-        $request = self::$db->select($this->table_requests, array('rkey' => $key, 'type' => $type), array('id', 'uid', 'expire'));
+        $request = $this->db->select($this->table_requests, array('rkey' => $key, 'type' => $type), array('id', 'uid', 'expire'));
         if(empty($request)){
             $this->addAttempt();
             $return['message'] = $this->lang[$type."key_incorrect"];
@@ -649,7 +650,7 @@ class User implements UserInterface{
     * @return boolean
     */
     protected function deleteRequest($id){
-        return self::$db->delete($this->table_requests, array('id' => $id));
+        return $this->db->delete($this->table_requests, array('id' => $id));
     }
     
     /**
@@ -778,7 +779,7 @@ class User implements UserInterface{
             return $return;
         }
 
-        if(self::$db->update($this->table_users, array('password' => $this->getHash($password)), array('id' => $data['uid'])) === false){
+        if($this->db->update($this->table_users, array('password' => $this->getHash($password)), array('id' => $data['uid'])) === false){
             $return['message'] = $this->lang["system_error"] . " #12";
             return $return;
         }
@@ -882,7 +883,7 @@ class User implements UserInterface{
             return $return;
         }
 
-        self::$db->update($this->table_users, array('password' => $this->getHash($newpass)), array('id' => $uid));
+        $this->db->update($this->table_users, array('password' => $this->getHash($newpass)), array('id' => $uid));
         $return['error'] = false;
         $return['message'] = $this->lang["password_changed"];
         return $return;
@@ -937,7 +938,7 @@ class User implements UserInterface{
             return $return;
         }
 
-        if(self::$db->update($this->table_users, array('email' => $email), array('id' => $uid)) === false){
+        if($this->db->update($this->table_users, array('email' => $email), array('id' => $uid)) === false){
             $return['message'] = $this->lang["system_error"] . " #15";
             return $return;
         }
@@ -954,7 +955,7 @@ class User implements UserInterface{
     public function isBlocked(){
         $ip = $this->getUserIP();
         $this->deleteAttempts($ip, false);
-        $attempts = self::$db->count($this->table_attempts, array('ip' => $ip), false);
+        $attempts = $this->db->count($this->table_attempts, array('ip' => $ip), false);
         if($attempts < intval($this->attempts_before_verify)){
             return "allow";
         }
@@ -1037,7 +1038,7 @@ class User implements UserInterface{
      * @return boolean
      */
     protected function addAttempt(){
-        return self::$db->insert($this->table_attempts, array('ip' => $this->getUserIP(), 'expirydate' => date("Y-m-d H:i:s", strtotime($this->attack_mitigation_time))));
+        return $this->db->insert($this->table_attempts, array('ip' => $this->getUserIP(), 'expirydate' => date("Y-m-d H:i:s", strtotime($this->attack_mitigation_time))));
     }
     
     /**
@@ -1048,9 +1049,9 @@ class User implements UserInterface{
      */
     protected function deleteAttempts($ip, $all = true){
         if($all === true){
-            return self::$db->delete($this->table_attempts, array('ip' => $ip));
+            return $this->db->delete($this->table_attempts, array('ip' => $ip));
         }
-        return self::$db->delete($this->table_attempts, array('ip' => $ip, 'expirydate' => array('<=', strtotime(date("Y-m-d H:i:s")))));
+        return $this->db->delete($this->table_attempts, array('ip' => $ip, 'expirydate' => array('<=', strtotime(date("Y-m-d H:i:s")))));
     }
     
     /**
@@ -1103,7 +1104,7 @@ class User implements UserInterface{
      * @return bool
      */
     public function comparePasswords($userid, $password_for_check){
-        $data = self::$db->select($this->table_users, array('id' => $userid), array('password'));
+        $data = $this->db->select($this->table_users, array('id' => $userid), array('password'));
         if(empty($data)){
             return false;
         }
@@ -1163,23 +1164,5 @@ class User implements UserInterface{
     public function getUserEmail(){
         if(!isset($this->userInfo)){$this->getUserInfo();}
         return $this->userInfo['email'];
-    }
-    
-    /**
-     * Returns the users first name from the users information if they are logged in
-     * @return string This should be the users first name
-     */
-    public function getFirstname(){
-        if(!isset($this->userInfo)){$this->getUserInfo();}
-        return $this->userInfo['first_name'];
-    }
-    
-    /**
-     * Returns the users last name from the users information if they are logged in
-     * @return string This should be the users last name
-     */
-    public function getLastname(){
-        if(!isset($this->userInfo)){$this->getUserInfo();}
-        return $this->userInfo['last_name'];
     }
 }
