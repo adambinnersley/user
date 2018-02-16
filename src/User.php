@@ -402,7 +402,7 @@ class User implements UserInterface{
     * @param string $hash
     * @return boolean
     */
-    protected function checkSession($hash) {
+    public function checkSession($hash) {
         if($this->isBlocked() == "block") {
             return false;
         }

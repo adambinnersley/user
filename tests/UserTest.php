@@ -131,6 +131,45 @@ class UserTest extends TestCase{
     }
     
     /**
+     * @depends testLogin
+     * @covers \UserAuth\User::checkSession
+     * @covers \UserAuth\User::__get
+     * @covers \UserAuth\User::deleteAttempts
+     * @covers \UserAuth\User::getUserIP
+     * @covers \UserAuth\User::getIP
+     * @covers \UserAuth\User::isBlocked
+     */
+    public function testCheckSession()
+    {
+        // Get the user's (created and logged in as earlier) session hash
+        $uid = self::$conn->select(self::$user->table_users, array('email' => 'test@email.com'))['id'];
+        $hash = self::$conn->select(self::$user->table_sessions, array('uid' => $uid))['hash'];
+        // Successful checkSession
+        $this->assertTrue(self::$user->checkSession($hash));
+        // Failed checkSession: invalid session hash
+        $this->assertFalse(self::$user->checkSession("invalidhash"));
+        // Failed checkSession: inexistant session hash
+        $this->assertFalse(self::$user->checkSession("aaafda8ea2c65a596c7e089f256b1534f2298000"));
+    }
+    
+    /**
+     * @depends testLogin
+     * @covers \UserAuth\User::getSessionUID
+     * @covers \UserAuth\User::__get
+     */
+    public function testGetSessionUID()
+    {
+        $uid = self::$conn->select(self::$user->table_users, array('email' => 'test@email.com'))['id'];
+        $hash = self::$conn->select(self::$user->table_sessions, array('uid' => $uid))['hash'];
+        // Successful getSessionUID
+        $this->assertEquals($uid, self::$user->getSessionUID($hash));
+        // Failed getSessionUID: invalid session hash
+        $this->assertFalse(self::$user->getSessionUID("invalidhash"));
+        // Failed getSessionUID: inexistant session hash
+        $this->assertFalse(self::$user->getSessionUID("aaafda8ea2c65a596c7e089f256b1534f2298000"));
+    }
+    
+    /**
      * @covers \UserAuth\User::getUserInfo
      * @covers \UserAuth\User::getUser
      * @covers \UserAuth\User::getUserID
