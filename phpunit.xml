@@ -30,5 +30,7 @@
         <var name="PASSWORD" value=""/>
         <var name="DATABASE" value="user"/>
         <var name="DRIVER" value="mysql"/>
+    	<server name="REMOTE_ADDR" value="127.0.0.1" />
+        <server name="HTTP_USER_AGENT" value="PHPUnit Test Browser" />
     </php>
 </phpunit>

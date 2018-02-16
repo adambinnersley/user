@@ -56,6 +56,9 @@ class UserTest extends TestCase{
      * @covers \UserAuth\User::addAttempt
      * @covers \UserAuth\User::addUser
      * @covers \UserAuth\User::getHash
+     * @covers \UserAuth\User::deleteAttempts
+     * @covers \UserAuth\User::getUserIP
+     * @covers \UserAuth\User::getIP
      */
     public function testRegister(){
         // Successful registration
@@ -114,6 +117,9 @@ class UserTest extends TestCase{
      * @covers \UserAuth\User::addAttempt
      * @covers \UserAuth\User::addSession
      * @covers \UserAuth\User::setLastLogin
+     * @covers \UserAuth\User::deleteAttempts
+     * @covers \UserAuth\User::getUserIP
+     * @covers \UserAuth\User::getIP
      */
     public function testLogin(){
         // Successful login
