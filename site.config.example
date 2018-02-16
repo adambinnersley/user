@@ -2,7 +2,6 @@ define('SITE_NAME', '');
 define('SITE_URL', '');
 define('SITE_KEY', "fghuior.)/!/jdUkd8s2!7HVHG7777ghg");
 
-
 define('USE_SMTP', 0);
 define('SMTP_AUTH', 1);
 define('SMTP_DEBUG', 0);

@@ -19,6 +19,7 @@ install:
 
 script:
   - vendor/bin/phpunit
+  - phpunit --stderr
 
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar

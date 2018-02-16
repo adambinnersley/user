@@ -9,7 +9,7 @@ DROP TABLE IF EXISTS `attempts`;
 CREATE TABLE `attempts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `ip` varchar(39) NOT NULL,
-  `expiredate` datetime NOT NULL,
+  `expirydate` datetime NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
