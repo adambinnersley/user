@@ -373,8 +373,8 @@ class User implements UserInterface{
         if(!$this->db->insert($this->table_sessions, array('uid' => $uid, 'hash' => $data['hash'], 'expiredate' => $data['expire'], 'ip' => $this->getIp(), 'agent' => (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''), 'cookie_crc' => sha1($data['hash'] . SITE_KEY)))) {
             return false;
         }
-        $this->setLastLogin($uid);
         setcookie($this->cookie_name, $data['hash'], strtotime($data['expire']), '/');
+        $this->setLastLogin($uid);
         
         return $data;
     }
@@ -470,7 +470,7 @@ class User implements UserInterface{
         $return['error'] = true;
 
         $safeemail = htmlentities(strtolower($email));
-        $requiredParams = array($safeemail, $this->getHash($password), ($sendmail ? 0 : 1));
+        $requiredParams = array('email' => $safeemail, 'password' => $this->getHash($password), 'isactive' => ($sendmail ? 0 : 1));
         if(is_array($params)&& count($params) > 0) {
             $setParams = array_merge($requiredParams, $params);
         }
