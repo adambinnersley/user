@@ -55,7 +55,7 @@ class User implements UserInterface{
      */
     public function __construct(Database $db, $language = "en_GB") {
         $this->db = $db;
-        $this->setLanguageFile("languages/{$language}.php");
+        $this->setLanguageFile(dirname(__FILE__)."/languages/{$language}.php");
         date_default_timezone_set($this->site_timezone);
     }
     
@@ -65,7 +65,10 @@ class User implements UserInterface{
      * @return mixed This will be the string value if it exists
      */
     public function __get($name) {
-        return $this->$name;
+        if(property_exists($this, $name)) {
+            return $this->$name;
+        }
+        return false;
     }
     
     /**
@@ -74,7 +77,7 @@ class User implements UserInterface{
      * @param mixed $value This should be the variable value you wish to set it to
      */
     public function __set($name, $value) {
-        if(defined($this->$name)) {
+        if(property_exists($this, $name)) {
             $this->$name = $value;
         }
     }
