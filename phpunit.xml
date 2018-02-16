@@ -14,10 +14,21 @@
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">src</directory>
+            <exclude>
+                <directory suffix=".php">src/languages</directory>
+            </exclude>
         </whitelist>
     </filter>
     
     <logging>
         <log type="coverage-clover" target="clover.xml"/>
     </logging>
+    
+    <php>
+        <var name="HOSTNAME" value="localhost"/>
+        <var name="USERNAME" value="root"/>
+        <var name="PASSWORD" value=""/>
+        <var name="DATABASE" value="user"/>
+        <var name="DRIVER" value="mysql"/>
+    </php>
 </phpunit>
