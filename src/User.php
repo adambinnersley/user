@@ -552,10 +552,12 @@ class User implements UserInterface{
             return $return;
         }
 
-        if(!$this->db->delete($this->table_users, array('id' => $uid)) || !$this->db->delete($this->table_sessions, array('uid' => $uid)) || !$this->db->delete($this->table_requests, array('uid' => $uid))) {
+        if(!$this->db->delete($this->table_users, array('id' => $uid))) {
             $return['message'] = $this->lang["system_error"] . " #05";
             return $return;
         }
+        $this->db->delete($this->table_sessions, array('uid' => $uid));
+        $this->db->delete($this->table_requests, array('uid' => $uid));
 
         $return['error'] = false;
         $return['message'] = $this->lang["account_deleted"];
