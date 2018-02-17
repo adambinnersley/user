@@ -264,6 +264,7 @@ class User implements UserInterface{
         
         $this->db->update($this->table_users, array('isactive' => 1), array('id' => $request['uid']));
         $this->deleteRequest($request['id']);
+        $this->deleteAttempts($this->getIp());
 
         $return['error'] = false;
         $return['message'] = $this->lang["account_activated"];
