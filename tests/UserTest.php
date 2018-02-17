@@ -1,4 +1,5 @@
 <?php
+
 namespace UserAuth\Tests;
 
 use DBAL\Database;
@@ -18,6 +19,7 @@ class UserTest extends TestCase{
         self::$conn = new Database($GLOBALS['HOSTNAME'], $GLOBALS['USERNAME'], $GLOBALS['PASSWORD'], $GLOBALS['DATABASE'], false, false, true, $GLOBALS['DRIVER']);
         self::$conn->query(file_get_contents(dirname(dirname(__FILE__)).'/database/database_mysql.sql'));
         self::$user = new User(self::$conn);
+        include dirname(dirname(__FILE__))."/functions.php";
     }
     
     /**
@@ -72,8 +74,6 @@ class UserTest extends TestCase{
     }
     
     /**
-     * @covers \UserAuth\User::__set
-     * @covers \UserAuth\User::activate
      * @covers \UserAuth\User::register
      * @covers \UserAuth\User::blockStatus
      * @covers \UserAuth\User::isBlocked
@@ -83,13 +83,20 @@ class UserTest extends TestCase{
      * @covers \UserAuth\User::minPasswordStrength
      * @covers \UserAuth\User::isEmailTaken
      * @covers \UserAuth\User::addAttempt
-     * @covers \UserAuth\User::deleteRequest
      * @covers \UserAuth\User::addUser
      * @covers \UserAuth\User::getHash
+     * @covers \UserAuth\User::deleteAttempts
+     * @covers \UserAuth\User::getUserIP
+     * @covers \UserAuth\User::getIP
+     * @covers \UserAuth\User::activate
      * @covers \UserAuth\User::getBaseUser
+     * @covers \UserAuth\User::addRequest
+     * @covers \UserAuth\User::getRandomKey
+     * @covers \UserAuth\User::getRequest
+     * @covers \UserAuth\User::deleteRequest
      */
-    public function testActivate(){
-        $this->markTestIncomplete();
+    public function testActivateUser(){
+        $this->assertFalse(self::$user->register('activate@email.com', 'T3H-1337-P@$$', 'T3H-1337-P@$$', array(), NULL, true)['error']);
     }
     
     /**

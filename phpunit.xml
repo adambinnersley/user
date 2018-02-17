@@ -31,10 +31,22 @@
         <var name="PASSWORD" value=""/>
         <var name="DATABASE" value="user"/>
         <var name="DRIVER" value="mysql"/>
+        
     	<server name="REMOTE_ADDR" value="127.0.0.1" />
         <server name="HTTP_USER_AGENT" value="PHPUnit Test Browser" />
+        
         <const name="SITE_NAME" value="PHPUNITTEST" />
         <const name="SITE_URL" value="http://localhost" />
         <const name="SITE_KEY" value="fghuior.)/!/jdUkd8s2!7HVHG7777ghg" />
+        
+        <const name="USE_SMTP" value="0" />
+        <const name="SMTP_AUTH" value="0" />
+        <const name="SMTP_DEBUG" value="0" />
+        <const name="SMTP_SECURITY" value="NULL" />
+
+        <const name="SMTP_HOST" value="smtp.example.com" />
+        <const name="SMTP_PORT" value="25" />
+        <const name="SMTP_USERNAME" value="email@example.com" />
+        <const name="SMTP_PASSWORD" value="password" />
     </php>
 </phpunit>
