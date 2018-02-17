@@ -89,6 +89,7 @@ class UserTest extends TestCase{
      * @covers \UserAuth\User::getUserIP
      * @covers \UserAuth\User::getIP
      * @covers \UserAuth\User::activate
+     * @covers \UserAuth\User::__get
      * @covers \UserAuth\User::getBaseUser
      * @covers \UserAuth\User::addRequest
      * @covers \UserAuth\User::getRandomKey
@@ -96,7 +97,17 @@ class UserTest extends TestCase{
      * @covers \UserAuth\User::deleteRequest
      */
     public function testActivateUser(){
+        self::$user->send_activation_email = false;
         $this->assertFalse(self::$user->register('activate@email.com', 'T3H-1337-P@$$', 'T3H-1337-P@$$', array(), NULL, true)['error']);
+        
+        $key = self::$user->getRandomKey(20);
+        $this->assertEquals(20, strlen($key));
+        $uid = self::$conn->select(self::$user->table_users, array('email' => 'activate@email.com'))['id'];
+        self::$conn->insert(self::$user->table_requests, array('uid' => $uid, 'rkey' => $key, 'expire' => date("Y-m-d H:i:s", strtotime(self::$user->request_key_expiration)), 'type' => 'activation'));
+        
+        $this->assertTrue(self::$user->activate('dsgsdfgsdf')['error']);
+        
+        $this->assertFalse(self::$user->activate($key)['error']);
     }
     
     /**
@@ -122,37 +133,6 @@ class UserTest extends TestCase{
         $this->assertTrue(self::$user->login("incorrect@email.com", "IncorrectPassword1")['error']);
         // Failed login: incorrect password
         $this->assertTrue(self::$user->login("test@email.com", "IncorrectPassword1")['error']);
-    }
-    
-    /**
-     * @covers \UserAuth\User::changePassword
-     * @covers \UserAuth\User::blockStatus
-     * @covers \UserAuth\User::isBlocked
-     * @covers \UserAuth\User::validatePassword
-     * @covers \UserAuth\User::minPasswordStrength
-     * @covers \UserAuth\User::getBaseUser
-     * @covers \UserAuth\User::getHash
-     * @covers \UserAuth\User::deleteAttempts
-     * @covers \UserAuth\User::getUserIP
-     * @covers \UserAuth\User::getIP
-     * @covers \UserAuth\User::__get
-     * @covers \UserAuth\User::addAttempt
-     * @covers \UserAuth\User::checkCaptcha
-     */
-    public function testResetPassword(){
-        $uid = self::$conn->select(self::$user->table_users, array('email' => 'test@email.com'))['id'];;
-        // Successful changePassword
-        $this->assertFalse(self::$user->changePassword($uid, 'T3H-1337-P@$$', 'T3H-1337-P@$$2', 'T3H-1337-P@$$2')['error']);
-        // Failed changePassword: invalid current password
-        $this->assertTrue(self::$user->changePassword($uid, "invalid", 'T3H-1337-P@$$2', 'T3H-1337-P@$$2')['error']);
-        // Failed changePassword: incorrect current password
-        $this->assertTrue(self::$user->changePassword($uid, "IncorrectPassword1", 'T3H-1337-P@$$2', 'T3H-1337-P@$$2')['error']);
-        // Failed changePassword: invalid new password
-        $this->assertTrue(self::$user->changePassword($uid, 'T3H-1337-P@$$2', "lamepass", "lamepass")['error']);
-        // Failed changePassword: new password and confirmation do not match
-        $this->assertTrue(self::$user->changePassword($uid, 'T3H-1337-P@$$2', 'T3H-1337-P@$$3', 'T3H-1337-P@$$4')['error']);
-        // Failed changePassword: incorrect UID
-        $this->assertTrue(self::$user->changePassword(9999999, 'T3H-1337-P@$$2', 'T3H-1337-P@$$3', 'T3H-1337-P@$$3')['error']);
     }
     
     /**
@@ -190,6 +170,37 @@ class UserTest extends TestCase{
         $this->assertFalse(self::$user->getSessionUID("invalidhash"));
         // Failed getSessionUID: inexistant session hash
         $this->assertFalse(self::$user->getSessionUID("aaafda8ea2c65a596c7e089f256b1534f2298000"));
+    }
+    
+    /**
+     * @covers \UserAuth\User::changePassword
+     * @covers \UserAuth\User::blockStatus
+     * @covers \UserAuth\User::isBlocked
+     * @covers \UserAuth\User::validatePassword
+     * @covers \UserAuth\User::minPasswordStrength
+     * @covers \UserAuth\User::getBaseUser
+     * @covers \UserAuth\User::getHash
+     * @covers \UserAuth\User::deleteAttempts
+     * @covers \UserAuth\User::getUserIP
+     * @covers \UserAuth\User::getIP
+     * @covers \UserAuth\User::__get
+     * @covers \UserAuth\User::addAttempt
+     * @covers \UserAuth\User::checkCaptcha
+     */
+    public function testResetPassword(){
+        $uid = self::$conn->select(self::$user->table_users, array('email' => 'test@email.com'))['id'];
+        // Successful changePassword
+        $this->assertFalse(self::$user->changePassword($uid, 'T3H-1337-P@$$', 'T3H-1337-P@$$2', 'T3H-1337-P@$$2')['error']);
+        // Failed changePassword: invalid current password
+        $this->assertTrue(self::$user->changePassword($uid, "invalid", 'T3H-1337-P@$$2', 'T3H-1337-P@$$2')['error']);
+        // Failed changePassword: incorrect current password
+        $this->assertTrue(self::$user->changePassword($uid, "IncorrectPassword1", 'T3H-1337-P@$$2', 'T3H-1337-P@$$2')['error']);
+        // Failed changePassword: invalid new password
+        $this->assertTrue(self::$user->changePassword($uid, 'T3H-1337-P@$$2', "lamepass", "lamepass")['error']);
+        // Failed changePassword: new password and confirmation do not match
+        $this->assertTrue(self::$user->changePassword($uid, 'T3H-1337-P@$$2', 'T3H-1337-P@$$3', 'T3H-1337-P@$$4')['error']);
+        // Failed changePassword: incorrect UID
+        $this->assertTrue(self::$user->changePassword(9999999, 'T3H-1337-P@$$2', 'T3H-1337-P@$$3', 'T3H-1337-P@$$3')['error']);
     }
     
     /**
