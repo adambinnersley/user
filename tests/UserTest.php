@@ -239,15 +239,15 @@ class UserTest extends TestCase{
     public function testDeleteUser() {
         // Empty attempts table
         self::$conn->delete(self::$user->table_attempts, array('id' => array('>=', 1)));
-        $uid = self::$conn->select(self::$user->table_users, array('email' => 'test@email.com'))['id'];;
+        $uid = self::$conn->select(self::$user->table_users, array('email' => 'test@email.com'))['id'];
         // Failed deleteUser: invalid password
-        //$this->assertTrue(self::$user->deleteUser($uid, "lamepass")['error']);
+        $this->assertTrue(self::$user->deleteUser($uid, "lamepass")['error']);
         // Failed deleteUser: incorrect password
-        //$this->assertTrue(self::$user->deleteUser($uid, "IncorrectPassword1")['error']);
+        $this->assertTrue(self::$user->deleteUser($uid, "IncorrectPassword1")['error']);
         // Successful deleteUser
         $this->assertFalse(self::$user->deleteUser($uid, 'T3H-1337-P@$$2')['error']);
         // Failed deleteUser: incorrect UID
-        //$this->assertTrue(self::$user->deleteUser(9999999, "IncorrectPassword1")['error']);
+        $this->assertTrue(self::$user->deleteUser(9999999, "IncorrectPassword1")['error']);
     }
     
     /**
