@@ -187,12 +187,13 @@ class UserTest extends TestCase{
     
     /**
      * @covers \UserAuth\User::isEmailTaken
+     * @covers \UserAuth\User::checkEmailExists
      */
     public function testIsEmailTaken(){
-        // Successful isEmailTaken
         $this->assertTrue(self::$user->isEmailTaken("test@email.com"));
-        // Failed isEmailTaken: unused email
         $this->assertFalse(self::$user->isEmailTaken("unused@email.com"));
+        $this->assertArrayHasKey('id', self::$user->checkEmailExists("test@email.com"));
+        $this->assertFalse(self::$user->checkEmailExists("unused@email.com"));
     }
     
     /**
