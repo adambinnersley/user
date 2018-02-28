@@ -1149,9 +1149,9 @@ class User implements UserInterface{
         }
         else{
             if(is_numeric($userID)) {
-                return $this->getUser($userID);
+                return $this->getUser(intval($userID));
             }
-            $userInfo = $this->getUser($this->getUserID());
+            $userInfo = $this->getUser(intval($this->getUserID()));
             if(!empty($userInfo)) {
                 $this->userInfo = $userInfo;
                 $this->userID = $userInfo['id'];
