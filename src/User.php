@@ -50,7 +50,6 @@ class User implements UserInterface{
     /**
      * Initiates essential objects
      * @param Database $db
-     * @param Config $config
      * @param string $language
      */
     public function __construct(Database $db, $language = "en_GB") {
@@ -84,6 +83,7 @@ class User implements UserInterface{
     
     /**
      * Sets the language file
+     * @property array $lang This variable is retrieved from the language file
      * @param string $location This should be the location of the language file you wish to use
      * @return $this
      */
