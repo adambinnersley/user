@@ -1066,7 +1066,7 @@ class User implements UserInterface{
         if($all === true) {
             return $this->db->delete($this->table_attempts, array('ip' => $ip));
         }
-        return $this->db->delete($this->table_attempts, array('ip' => $ip, 'expirydate' => array('<=', strtotime(date("Y-m-d H:i:s")))));
+        return $this->db->delete($this->table_attempts, array('ip' => $ip, 'expirydate' => array('<=', date("Y-m-d H:i:s"))));
     }
     
     /**
