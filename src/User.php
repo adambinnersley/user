@@ -374,7 +374,7 @@ class User implements UserInterface{
         if(!$this->db->insert($this->table_sessions, array('uid' => $uid, 'hash' => $data['hash'], 'expiredate' => $data['expire'], 'ip' => $this->getIp(), 'agent' => (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''), 'cookie_crc' => sha1($data['hash'] . SITE_KEY)))) {
             return false;
         }
-        setcookie($this->cookie_name, $data['hash'], strtotime($data['expire']), '/');
+        setcookie($this->cookie_name, $data['hash'], strtotime($data['expire']), '/', '', (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? true : false), true);
         $this->setLastLogin($uid);
         
         return $data;
