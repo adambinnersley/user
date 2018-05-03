@@ -4,7 +4,6 @@ namespace UserAuth;
 use DBAL\Database;
 
 interface UserInterface{
-    public function __construct(Database $db, $language = "en_GB");
     public function login($email, $password, $remember = 0, $captcha = NULL);
     public function register($email, $password, $repeatpassword, $params = array(), $captcha = NULL, $sendmail = NULL);
     public function activate($key);
