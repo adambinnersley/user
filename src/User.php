@@ -126,7 +126,7 @@ class User implements UserInterface{
             return $return;
         }
 
-        if ($user['isactive'] != 1) {
+        if ($user['isactive'] == 0) {
             $this->addAttempt();
             $return['message'] = $this->lang["account_inactive"];
             return $return;
@@ -255,7 +255,7 @@ class User implements UserInterface{
             return $return;
         }
 
-        if($this->getBaseUser($request['uid'])['isactive'] == 1) {
+        if($this->getBaseUser($request['uid'])['isactive'] >= 1) {
             $this->addAttempt();
             $this->deleteRequest($request['id']);
             $return['message'] = $this->lang["system_error"] . " #02";
@@ -601,7 +601,7 @@ class User implements UserInterface{
             $this->deleteRequest($row['id']);
         }
 
-        if($type == "activation" && $this->getBaseUser($uid)['isactive'] == 1) {
+        if($type == "activation" && $this->getBaseUser($uid)['isactive'] >= 1) {
             $return['message'] = $this->lang["already_activated"];
             return $return;
         }
@@ -832,7 +832,7 @@ class User implements UserInterface{
             return $return;
         }
 
-        if($this->getBaseUser($row['id'])['isactive'] == 1) {
+        if($this->getBaseUser($row['id'])['isactive'] >= 1) {
             $this->addAttempt();
             $return['message'] = $this->lang["already_activated"];
             return $return;
