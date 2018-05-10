@@ -138,11 +138,13 @@ class User implements UserInterface{
             return $return;
         }
 
+        $this->userID = $user['id'];
         $return['error'] = false;
         $return['message'] = $this->lang["logged_in"];
         $return['hash'] = $sessiondata['hash'];
         $return['expire'] = $sessiondata['expiretime'];
         $return['cookie_name'] = $this->cookie_name;
+        $return['user_id'] = $this->userID;
         return $return;
     }
     
