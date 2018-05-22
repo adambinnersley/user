@@ -1,4 +1,3 @@
-DROP TABLE IF EXISTS `attempts`;
 CREATE TABLE IF NOT EXISTS `attempts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `ip` varchar(39) NOT NULL,
@@ -6,7 +5,6 @@ CREATE TABLE IF NOT EXISTS `attempts` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `requests`;
 CREATE TABLE IF NOT EXISTS `requests` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `uid` int(11) UNSIGNED NOT NULL,
@@ -17,7 +15,6 @@ CREATE TABLE IF NOT EXISTS `requests` (
   KEY `uid` (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `sessions`;
 CREATE TABLE IF NOT EXISTS `sessions` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `uid` int(11) UNSIGNED NOT NULL,
@@ -30,7 +27,6 @@ CREATE TABLE IF NOT EXISTS `sessions` (
   KEY `uid` (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) UNSIGNED NOT NULL AUTO_INCREMENT,
   `email` varchar(100) DEFAULT NULL,

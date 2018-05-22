@@ -15,7 +15,7 @@ if(!function_exists('sendEmail')){
      */
     function sendEmail($to, $subject, $plain, $html, $from, $fromname, $replyto = '', $attachment = ''){
         // Check configuration for SMTP parameters
-        $mail = new PHPMailer;
+        $mail = new PHPMailer\PHPMailer\PHPMailer();
         $mail->CharSet = 'UTF-8';
         if(USE_SMTP){
             $mail->isSMTP();
