@@ -1,0 +1,6 @@
+SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE `attempts`;
+TRUNCATE `requests`;
+TRUNCATE `sessions`;
+TRUNCATE `users`;
+SET FOREIGN_KEY_CHECKS = 1;
