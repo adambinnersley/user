@@ -4,7 +4,7 @@
     "type": "library",
     "require": {
         "adamb/database": ">=1.4",
-        "phpmailer/phpmailer": ">=6.0",
+        "phpmailer/phpmailer": ">=6.0.5",
         "bjeavons/zxcvbn-php": ">=0.3.0"
     },
     "require-dev": {
