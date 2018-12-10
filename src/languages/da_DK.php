@@ -64,8 +64,8 @@ $lang['email_activation_body'] = 'Hello,<br/><br/> For at være i stand til at l
 $lang['email_activation_altbody'] = 'Hello, ' . "\n\n" . 'For at være i stand til at logge ind på din konto skal du først aktivere din konto ved at besøge følgende link :' . "\n" . '%1$s/%2$s' . "\n\n" . 'Derefter skal du bruge følgende aktiveringsnøgle: %3$s' . "\n\n" . 'Hvis du ikke har registeret på %1$s for nylig så er denne besked blev sendt ved en fejl, venlisgt ignorere det.';
 
 $lang['email_reset_subject'] = '%s - Password reset request';
-$lang['email_reset_body'] = 'Hello,<br/><br/>Nulstill din adgangskode ved at klikke på følgende link :<br/><br/><strong><a href="%1$s/%2$s">%1$s/%2$s</a></strong><br/><br/>Derefter skal du bruge følgende nøgle : <strong>%3$s</strong><br/><br/>Hvis du ikke har anmodet en password reset key på %1$s for nylig så er denne besked blev sendt ved en fejl, venlisgt ignorere det.';
-$lang['email_reset_altbody'] = 'Hello, ' . "\n\n" . 'Nulstill din adgangskode ved at klikke på følgende link :' . "\n" . '%1$s/%2$s' . "\n\n" . 'Derefter skal du bruge følgende nøgle: %3$s' . "\n\n" . 'Hvis du ikke har anmodet en password reset key på %1$s for nylig så er denne besked blev sendt ved en fejl, venlisgt ignorere det.';
+$lang['email_reset_body'] = 'Hello,<br/><br/>Nulstill din adgangskode ved at klikke på følgende link :<br/><br/><strong><a href="%1$s/%2$s?key=%3$s">%1$s/%2$s?key=%3$s</a></strong><br/><br/>Hvis du ikke har anmodet en password reset key på %1$s for nylig så er denne besked blev sendt ved en fejl, venlisgt ignorere det.';
+$lang['email_reset_altbody'] = 'Hello, ' . "\n\n" . 'Nulstill din adgangskode ved at klikke på følgende link :' . "\n" . '%1$s/%2$s?key=%3$s' . "\n\n" . 'Hvis du ikke har anmodet en password reset key på %1$s for nylig så er denne besked blev sendt ved en fejl, venlisgt ignorere det.';
 
 $lang['account_deleted'] = "Konto slettet.";
 $lang['function_disabled'] = "Denne funktion er blevet deaktiveret.";

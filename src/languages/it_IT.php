@@ -64,8 +64,8 @@ $lang['email_activation_body'] = 'Ciao,<br/><br/> per poter accedere al tuo acco
 $lang['email_activation_altbody'] = 'Ciao, ' . "\n\n" . 'per poter accedere al tuo account &grave; necessario attivarlo cliccando su questo link :' . "\n" . '%1$s/%2$s' . "\n\n" . 'Inserisci poi il seguente codice d&quot;attivazione: %3$s' . "\n\n" . 'Per favore ignora questo messaggio se non ti sei registrato recentemente su %1$s.';
 
 $lang['email_reset_subject'] = '%s - Richiesta reset password';
-$lang['email_reset_body'] = 'Ciao,<br/><br/>per eseguire il reset della password clicca su questo link :<br/><br/><strong><a href="%1$s/%2$s">%1$s/%2$s</a></strong><br/><br/>Inserisci poi il seguente codice di reset password: <strong>%3$s</strong><br/><br/>Per favore ignora questo messaggio se non ha richiesto recentemente il reset della password su %1$s';
-$lang['email_reset_altbody'] = 'Ciao, ' . "\n\n" . 'per eseguire il reset della password clicca su questo link :' . "\n" . '%1$s/%2$s' . "\n\n" . 'Inserisci poi il seguente codice di reset password: %3$s' . "\n\n" . 'Per favore ignora questo messaggio se non ha richiesto recentemente il reset della password su %1$s.';
+$lang['email_reset_body'] = 'Ciao,<br/><br/>per eseguire il reset della password clicca su questo link :<br/><br/><strong><a href="%1$s/%2$s?key=%3$s">%1$s/%2$s?key=%3$s</a></strong><br/><br/>Per favore ignora questo messaggio se non ha richiesto recentemente il reset della password su %1$s';
+$lang['email_reset_altbody'] = 'Ciao, ' . "\n\n" . 'per eseguire il reset della password clicca su questo link :' . "\n" . '%1$s/%2$s?key=%3$s' . "\n\n" . 'Per favore ignora questo messaggio se non ha richiesto recentemente il reset della password su %1$s.';
 
 $lang['account_deleted'] = "Account eliminato con successo.";
 $lang['function_disabled'] = "Questa funzione è stata disabilitata.";

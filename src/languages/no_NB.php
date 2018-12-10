@@ -64,8 +64,8 @@ $lang['email_activation_body'] = 'Hei,<br/><br/> For å kunne logge inn på kont
 $lang['email_activation_altbody'] = 'Hei, ' . "\n\n" . 'For å kunne logge inn på kontoen din må du først aktivere kontoen din ved å besøke følgende lenke:' . "\n" . '%1$s/%2$s' . "\n\n" . 'Deretter må du bruke følgende aktiveringsnøkkel: %3$s' . "\n\n" . 'Hvis du ikke meldte deg opp hos %1$s nylig, ble denne eposten sendt ved en feil. Vær snill og se bort fra den.';
 
 $lang['email_reset_subject'] = '%s - Forespørsel om tilbakestilling av passord';
-$lang['email_reset_body'] = 'Hei,<br/><br/>For å tilbakestille passordet ditt, trykk på følgende lenke:<br/><br/><strong><a href="%1$s/%2$s">%1$s/%2$s</a></strong><br/><br/>Deretter må du bruke følgende tilbakestillingsnøkkel: <strong>%3$s</strong><br/><br/>Hvis du ikke ba om en tilbakestilling av passord hos %1$s nylig, ble denne eposten sendt ved en feil. Vær vennlig og se bort fra den.';
-$lang['email_reset_altbody'] = 'Hei, ' . "\n\n" . 'For å tilbakestille passordet ditt, trykk på følgende lenke:' . "\n" . '%1$s/%2$s' . "\n\n" . 'Deretter må du bruke følgende tilbakestillingsnøkkel: %3$s' . "\n\n" . 'Hvis du ikke ba om en tilbakestilling av passord hos %1$s nylig, ble denne eposten sendt ved en feil. Vær vennlig og se bort fra den.';
+$lang['email_reset_body'] = 'Hei,<br/><br/>For å tilbakestille passordet ditt, trykk på følgende lenke:<br/><br/><strong><a href="%1$s/%2$s?key=%3$s">%1$s/%2$s?key=%3$s</a></strong><br/><br/>Hvis du ikke ba om en tilbakestilling av passord hos %1$s nylig, ble denne eposten sendt ved en feil. Vær vennlig og se bort fra den.';
+$lang['email_reset_altbody'] = 'Hei, ' . "\n\n" . 'For å tilbakestille passordet ditt, trykk på følgende lenke:' . "\n" . '%1$s/%2$s?key=%3$s' . "\n\n" . 'Hvis du ikke ba om en tilbakestilling av passord hos %1$s nylig, ble denne eposten sendt ved en feil. Vær vennlig og se bort fra den.';
 
 $lang['account_deleted'] = "Sletting av konto var vellyket.";
 $lang['function_disabled'] = "Denne funksjonen har blitt deaktivert.";

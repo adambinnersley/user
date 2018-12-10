@@ -64,8 +64,8 @@ $lang['email_activation_body'] = 'Üdv,<br/><br/> Ahhoz hogy be tudj jelentkezni
 $lang['email_activation_altbody'] = 'Üdv, ' . "\n\n" . 'Ahhoz hogy be tudj jelentkezni, először aktiválnod kell a fiókod. Az aktiváláshoz kattints az alábbi linkre:' . "\n" . '%1$s/%2$s' . "\n\n" . 'Ezt követően add meg az aktiváláshoz szükséges kulcsot: %3$s' . "\n\n" . 'Ha nem te nem regisztráltál fiókot a %1$s -on,akkor kérlek hagyd figyelmen kívűl ezt a levelet.';
 
 $lang['email_reset_subject'] = '%s - Jelszó helyreállítás';
-$lang['email_reset_body'] = 'Üdv,<br/><br/>Új jelszó létrehozásához kattints az alábbi linkre:<br/><br/><strong><a href="%1$s/%2$s">%1$s/%2$s</a></strong><br/><br/>Jelszó helyreállításhoz szüksége kulcs: <strong>%3$s</strong><br/><br/>Ha nem te kezdeményezted a jelszó helyreállítást a %1$s -on,akkor kérlek hagyd figyelmen kívűl ezt a levelet.';
-$lang['email_reset_altbody'] = 'Üdv, ' . "\n\n" . 'Új jelszó létrehozásához kattints az alábbi linkre:' . "\n" . '%1$s/%2$s' . "\n\n" . 'Jelszó helyreállításhoz szüksége kulcs: %3$s' . "\n\n" . 'Ha nem te kezdeményezted a jelszó helyreállítást a %1$s -on,akkor kérlek hagyd figyelmen kívűl ezt a levelet.';
+$lang['email_reset_body'] = 'Üdv,<br/><br/>Új jelszó létrehozásához kattints az alábbi linkre:<br/><br/><strong><a href="%1$s/%2$s?key=%3$s">%1$s/%2$s?key=%3$s</a></strong><br/><br/>Ha nem te kezdeményezted a jelszó helyreállítást a %1$s -on,akkor kérlek hagyd figyelmen kívűl ezt a levelet.';
+$lang['email_reset_altbody'] = 'Üdv, ' . "\n\n" . 'Új jelszó létrehozásához kattints az alábbi linkre:' . "\n" . '%1$s/%2$s?key=%3$s' . "\n\n" . 'Ha nem te kezdeményezted a jelszó helyreállítást a %1$s -on,akkor kérlek hagyd figyelmen kívűl ezt a levelet.';
 
 $lang['account_deleted'] = "A fiók sikeresen törőlve.";
 $lang['function_disabled'] = "Ez a funkció ki lett kapcsolva.";

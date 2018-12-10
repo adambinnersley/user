@@ -64,8 +64,8 @@ $lang['email_activation_body'] = 'Xin chào,<br/><br/> Để đăng nhập bạn
 $lang['email_activation_altbody'] = 'Xin chào, ' . "\n\n" . 'Để đăng nhập bạn cần phải kích hoạt tài khoản bằng cách click vào đường dẫn sau:' . "\n" . '%1$s/%2$s' . "\n\n" . 'Sau đó dùng mã kích hoạt sau: %3$s' . "\n\n" . 'Nếu bạn chưa từng đăng ký tài khoản tại %1$s vui lòng bỏ qua email này.';
 
 $lang['email_reset_subject'] = '%s - Yêu cầu reset mật khẩu';
-$lang['email_reset_body'] = 'Xin chào,<br/><br/>Click vào đường dẫn sau để reset mật khẩu:<br/><br/><strong><a href="%1$s/%2$s">%1$s/%2$s</a></strong><br/><br/>Sau đó dùng mã reset password sau: <strong>%3$s</strong><br/><br/>Nếu bạn không gửi yêu cầu reset mật khẩu tại %1$s vui lòng bỏ qua email này.';
-$lang['email_reset_altbody'] = 'Xin chào, ' . "\n\n" . 'Đi đến đường dẫn sau để reset mật khẩu:' . "\n" . '%1$s/%2$s' . "\n\n" . 'Sau đó dùng mã reset password sau: %3$s' . "\n\n" . 'Nếu bạn không gửi yêu cầu reset mật khẩu tại %1$s vui lòng bỏ qua email này.';
+$lang['email_reset_body'] = 'Xin chào,<br/><br/>Click vào đường dẫn sau để reset mật khẩu:<br/><br/><strong><a href="%1$s/%2$s?key=%3$s">%1$s/%2$s?key=%3$s</a></strong><br/><br/>Nếu bạn không gửi yêu cầu reset mật khẩu tại %1$s vui lòng bỏ qua email này.';
+$lang['email_reset_altbody'] = 'Xin chào, ' . "\n\n" . 'Đi đến đường dẫn sau để reset mật khẩu:' . "\n" . '%1$s/%2$s?key=%3$s' . "\n\n" . 'Nếu bạn không gửi yêu cầu reset mật khẩu tại %1$s vui lòng bỏ qua email này.';
 
 $lang['account_deleted'] = "Tài khoản đã được xóa thành công.";
 $lang['function_disabled'] = "Chức năng này đã bị vô hiệu hóa.";

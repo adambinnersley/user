@@ -64,8 +64,8 @@ $lang['email_activation_body'] = 'Hej,<br/><br/> För att kunna logga in på dit
 $lang['email_activation_altbody'] = 'Hej, ' . "\n\n" . 'För att kunna logga in på ditt konto behöver du först aktivera ditt konto genom att klicka på följande länk :' . "\n" . '%1$s/%2$s' . "\n\n" . 'Du kommer sedan att behöva använda följande aktiveringskod: %3$s' . "\n\n" . 'Om du inte registrerat dig på %1$s nyligen så har detta meddelande skickats felaktigt, var isåfall god och ignorera det.';
 
 $lang['email_reset_subject'] = '%s - Återställning av lösenord';
-$lang['email_reset_body'] = 'Hej,<br/><br/>Klicka på följande länk för att återställa ditt lösenord :<br/><br/><strong><a href="%1$s/%2$s">%1$s/%2$s</a></strong><br/><br/>Du kommer sedan att behöva använda följande återställningskod: <strong>%3$s</strong><br/><br/>Om du inte gjort en förfrågan för återställning av lösenord på %1$s nyligen så har detta meddelande skickats felaktigt, var isåfall god och ignorera det.';
-$lang['email_reset_altbody'] = 'Hej, ' . "\n\n" . 'Klicka på följande länk för att återställa ditt lösenord :' . "\n" . '%1$s/%2$s' . "\n\n" . 'Du kommer sedan att behöva använda följande återställningskod: %3$s' . "\n\n" . 'Om du inte gjort en förfrågan för återställning av lösenord på %1$s nyligen så har detta meddelande skickats felaktigt, var isåfall god och ignorera det.';
+$lang['email_reset_body'] = 'Hej,<br/><br/>Klicka på följande länk för att återställa ditt lösenord :<br/><br/><strong><a href="%1$s/%2$s?key=%3$s">%1$s/%2$s?key=%3$s</a></strong><br/><br/>Om du inte gjort en förfrågan för återställning av lösenord på %1$s nyligen så har detta meddelande skickats felaktigt, var isåfall god och ignorera det.';
+$lang['email_reset_altbody'] = 'Hej, ' . "\n\n" . 'Klicka på följande länk för att återställa ditt lösenord :' . "\n" . '%1$s/%2$s?key=%3$s' . "\n\n" . 'Om du inte gjort en förfrågan för återställning av lösenord på %1$s nyligen så har detta meddelande skickats felaktigt, var isåfall god och ignorera det.';
 
 $lang['account_deleted'] = "Borttagning av kontot lyckades.";
 $lang['function_disabled'] = "Denna funktion har inaktiverats.";

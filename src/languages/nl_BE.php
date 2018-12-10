@@ -64,8 +64,8 @@ $lang['email_activation_body'] = 'Hallo,<br/><br/> Om in te loggen in je account
 $lang['email_activation_altbody'] = 'Hallo, ' . "\n\n" . 'Om in te loggen in je account, moet je eerst je account activeren door te klikken op deze link:' . "\n" . '%1$s/%2$s' . "\n\n" . 'Vervolgens moet je deze activatiesleutel gebruiken: %3$s' . "\n\n" . 'Als je recent geen account op %1$s hebt proberen aanmaken, dan is dit bericht foutief verstuurd - gelieve het te negeren.';
 
 $lang['email_reset_subject'] = '%s - Herstelaanvraag voor je paswoord';
-$lang['email_reset_body'] = 'Hallo,<br/><br/>Om je paswoord te herstellen, klik deze link:<br/><br/><strong><a href="%1$s/%2$s">%1$s/%2$s</a></strong><br/><br/> Vervolgens moet je deze herstelsleutel gebruiken: <strong>%3$s</strong><br/><br/>Als je recent geen herstelsleutel voor je paswoord hebt aangevraagd op %1$s, dan is dit bericht foutief verstuurd - gelieve het te negeren.';
-$lang['email_reset_altbody'] = 'Hallo, ' . "\n\n" . 'Om je paswoord te herstellen, klik deze link:' . "\n" . '%1$s/%2$s' . "\n\n" . 'Vervolgens moet je deze herstelsleutel gebruiken: %3$s' . "\n\n" . 'Als je recent geen account op %1$s hebt proberen aanmaken, dan is dit bericht foutief verstuurd - gelieve het te negeren.';
+$lang['email_reset_body'] = 'Hallo,<br/><br/>Om je paswoord te herstellen, klik deze link:<br/><br/><strong><a href="%1$s/%2$s?key=%3$s">%1$s/%2$s?key=%3$s</a></strong><br/><br/> Als je recent geen herstelsleutel voor je paswoord hebt aangevraagd op %1$s, dan is dit bericht foutief verstuurd - gelieve het te negeren.';
+$lang['email_reset_altbody'] = 'Hallo, ' . "\n\n" . 'Om je paswoord te herstellen, klik deze link:' . "\n" . '%1$s/%2$s?key=%3$s' . "\n\n" . 'Als je recent geen account op %1$s hebt proberen aanmaken, dan is dit bericht foutief verstuurd - gelieve het te negeren.';
 
 $lang['account_deleted'] = "Je account is met success verwijderd.";
 $lang['function_disabled'] = "Deze functie is uitgeschakeld.";

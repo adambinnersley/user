@@ -39,7 +39,7 @@ class User implements UserInterface{
     protected $password_cost = 11;
     protected $password_min_score = 3;
     
-    protected $request_key_expiration = '+10 minutes';
+    protected $request_key_expiration = '+2 days';
     
     public $send_activation_email = true;
     public $send_reset_email = true;

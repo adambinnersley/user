@@ -64,8 +64,8 @@ $lang['email_activation_body'] = 'Cześć,<br/><br/> Aby aktywować konto klikni
 $lang['email_activation_altbody'] = 'Cześć,' . "\n\n" . 'Aby aktywować konto kliknij w link:' . "\n" . '%1$s/%2$s' . "\n\n" . 'Wprowadź tam klucz aktywacji: %3$s' . "\n\n" . 'Jeżeli rejestracja w serwisie %1$s nie była dokonana przez Ciebie i email ten został wysłany omyłkowo, proszę zignoruj go.';
 
 $lang['email_reset_subject'] = '%s - Procedura resetu hasła';
-$lang['email_reset_body'] = 'Cześć,<br/><br/>Aby zresetować hasło kliknij w link: <br/><br/><strong><a href="%1$s/%2$s">%1$s/%2$s</a></strong><br/><br/>Wprowadź tam klucz resetu: <strong>%3$s</strong><br/><br/>Jeżeli reset hasła w serwisie %1$s nie był dokonany przez Ciebie, proszę zignoruj tą wiadomość.';
-$lang['email_reset_altbody'] = 'Czesć, ' . "\n\n" . 'Aby zresetować hasło kliknij w link: ' . "\n" . '%1$s/%2$s' . "\n\n" . 'Wprowadź tam klucz resetu: %3$s' . "\n\n" . 'Jeżeli reset hasła w serwisie %1$s nie był dokonany przez Ciebie, proszę zignoruj tą wiadomość.';
+$lang['email_reset_body'] = 'Cześć,<br/><br/>Aby zresetować hasło kliknij w link: <br/><br/><strong><a href="%1$s/%2$s?key=%3$s">%1$s/%2$s?key=%3$s</a></strong><br/><br/>Jeżeli reset hasła w serwisie %1$s nie był dokonany przez Ciebie, proszę zignoruj tą wiadomość.';
+$lang['email_reset_altbody'] = 'Czesć, ' . "\n\n" . 'Aby zresetować hasło kliknij w link: ' . "\n" . '%1$s/%2$s?key=%3$s' . "\n\n" . 'Jeżeli reset hasła w serwisie %1$s nie był dokonany przez Ciebie, proszę zignoruj tą wiadomość.';
 
 $lang['account_deleted'] = "Pomyślnie usunięto konto.";
 $lang['function_disabled'] = "Ta funkcja jest wyłączona.";

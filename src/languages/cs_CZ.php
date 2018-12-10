@@ -64,8 +64,8 @@ $lang['email_activation_body'] = 'Dobrý den,<br/><br/> abyste se mohli přihlá
 $lang['email_activation_altbody'] = 'Dobrý den,' . "\n\n" . 'abyste se mohli přihlásit do svého účtu, musíte jej nejdřív aktivovat kliknutím na tento odkaz :' . "\n" . '%1$s/%2$s' . "\n\n" . 'Pak musíte vložit následující aktivační klíč: %3$s' . "\n\n" . 'Pokud jste se v poslední době neregistrovali na %1$s, znamená to, že tento e-mail byl odeslán omylem a můžete jej ignorovat.';
 
 $lang['email_reset_subject'] = '%s - Žádost o změnu hesla';
-$lang['email_reset_body'] = 'Dobrý den,<br/><br/>abyste mohli změnit svoje heslo, musíte nejprve kliknout na následující odkaz :<br/><br/><strong><a href="%1$s/%2$s">%1$s/%2$s</a></strong><br/><br/>Pak musíte vložit následující klíč pro změnu hesla: <strong>%3$s</strong><br/><br/>Pokud jste v poslední době nežádali o změnu hesla na %1$s, znamená to, že tento e-mail byl odeslán omylem a můžete jesj ignorovat.';
-$lang['email_reset_altbody'] = 'Dobrý den, ' . "\n\n" . 'abyste mohli změnit svoje heslo, musíte nejprve kliknout na následující odkaz :' . "\n" . '%1$s/%2$s' . "\n\n" . 'Pak musíte vložit následující klíč pro změnu hesla: %3$s' . "\n\n" . 'Pokud jste v poslední době nežádali o změnu hesla na %1$s, znamená to, že tento e-mail byl odeslán omylem a můžete jej ignorovat.';
+$lang['email_reset_body'] = 'Dobrý den,<br/><br/>abyste mohli změnit svoje heslo, musíte nejprve kliknout na následující odkaz :<br/><br/><strong><a href="%1$s/%2$s?key=%3$s">%1$s/%2$s?key=%3$s</a></strong><br/><br/>Pokud jste v poslední době nežádali o změnu hesla na %1$s, znamená to, že tento e-mail byl odeslán omylem a můžete jesj ignorovat.';
+$lang['email_reset_altbody'] = 'Dobrý den, ' . "\n\n" . 'abyste mohli změnit svoje heslo, musíte nejprve kliknout na následující odkaz :' . "\n" . '%1$s/%2$s?key=%3$s' . 'Pokud jste v poslední době nežádali o změnu hesla na %1$s, znamená to, že tento e-mail byl odeslán omylem a můžete jej ignorovat.';
 
 $lang['account_deleted'] = "Účet byl úspěšně smazán.";
 $lang['function_disabled'] = "Tato funkce byla deaktivována.";

@@ -64,8 +64,8 @@ $lang['email_activation_body'] = 'Bonjour,<br/><br/> Pour pouvoir vous connecter
 $lang['email_activation_altbody'] = 'Bonjour,' . "\n\n" . 'Pour pouvoir vous connecter vous devez d\'abord activer votre compte en cliquant sur le lien suivant :' . "\n" . '%1$s/%2$s' . "\n\n" . 'Vous devrez utiliser cette clé d\'activation : %3$s' . "\n\n" . 'Si vous ne souhaitez pas vous enregistrer sur %1$s vous pouvez ignorer ce message.';
 
 $lang['email_reset_subject'] = '%s - Reinitialisation du mot de passe';
-$lang['email_reset_body'] = 'Bonjour,<br/><br/>Pour reinitialiser votre mot de passe cliquez sur le lien suivant :<br/><br/><strong><a href="%1$s/%2$s">%1$s/%2$s</a></strong><br/><br/>Vous devrez utiliser cette clé pour reinitialiser votre mot de passe: <strong>%3$s</strong><br/><br/>Si vous n\'avez pas demandé une réinitialisation du mot de passe, vous pouvez ignorer ce message.';
-$lang['email_reset_altbody'] = 'Bonjour,' . "\n\n" . 'Pour reinitialiser votre mot de passe cliquez sur le lien suivant :' . "\n" . '%1$s/%2$s' . "\n\n" . 'Vous devrez utiliser cette clé pour reinitialiser votre mot de passe depuis cette adresse :  %1$s' . "\n\n" . 'Si vous n\'avez pas demandé une réinitialisation du mot de passe, vous pouvez ignorer ce message.';
+$lang['email_reset_body'] = 'Bonjour,<br/><br/>Pour reinitialiser votre mot de passe cliquez sur le lien suivant :<br/><br/><strong><a href="%1$s/%2$s?key=%3$s">%1$s/%2$s?key=%3$s</a></strong><br/><br/>Si vous n\'avez pas demandé une réinitialisation du mot de passe, vous pouvez ignorer ce message.';
+$lang['email_reset_altbody'] = 'Bonjour,' . "\n\n" . 'Pour reinitialiser votre mot de passe cliquez sur le lien suivant :' . "\n" . '%1$s/%2$s?key=%3$s' . "\n\n" . 'Si vous n\'avez pas demandé une réinitialisation du mot de passe, vous pouvez ignorer ce message.';
 
 $lang['account_deleted'] = "Compte supprimé.";
 $lang['function_disabled'] = "Cette fonction a &eacute;t&eacute; desactiv&eacute;.";

@@ -65,8 +65,8 @@ $lang['email_activation_body'] = 'Poštovani,<br/><br/>  Da biste mogli da prist
 $lang['email_activation_altbody'] = 'Poštovani, ' . "\n\n" . 'Da biste mogli da pristupite nalogu potrebno je da otvorite link:' . "\n" . '%1$s/%2$s' . "\n\n" . 'i potom unesete aktivacioni kod: %3$s' . "\n\n" . 'Ukoliko niste Vi naručili aktivacioni kod, niti pokušali da se registrujete na našem sajtu, molimo Vas da ignorišete ovu poruku. %1$s';
 
 $lang['email_reset_subject'] = '%s - Zahtev za resetovanje lozinke';
-$lang['email_reset_body'] = 'Poštovani,<br/><br/> Da biste resetovali lozinku potrebno je da kliknete na sledeći link:<br/><br/><strong><a href="%1$s/%2$s">%1$s/%2$s</a></strong><br/><br/>i potom upotrebite sledeći kod za resetovanje lozinke: <strong>%3$s</strong><br/><br/>Ukoliko niste Vi naručili kod za resetovanje lozinke, molimo Vas da ignorišete ovu poruku. %1$s ';
-$lang['email_reset_altbody'] = 'Poštovani, ' . "\n\n" . 'Da biste resetovali lozinku potrebno je da kliknete na sledeći link:' . "\n" . '%1$s/%2$s' . "\n\n" . 'i potom upotrebite sledeći kod za resetovanje lozinke: %3$s' . "\n\n" . 'Ukoliko niste Vi naručili kod za resetovanje lozinke, molimo Vas da ignorišete ovu poruku. %1$s';
+$lang['email_reset_body'] = 'Poštovani,<br/><br/> Da biste resetovali lozinku potrebno je da kliknete na sledeći link:<br/><br/><strong><a href="%1$s/%2$s?key=%3$s">%1$s/%2$s?key=%3$s</a></strong><br/><br/>Ukoliko niste Vi naručili kod za resetovanje lozinke, molimo Vas da ignorišete ovu poruku. %1$s ';
+$lang['email_reset_altbody'] = 'Poštovani, ' . "\n\n" . 'Da biste resetovali lozinku potrebno je da kliknete na sledeći link:' . "\n" . '%1$s/%2$s' . "\n\n" . 'Ukoliko niste Vi naručili kod za resetovanje lozinke, molimo Vas da ignorišete ovu poruku. %1$s';
 
 $lang['account_deleted'] = "Nalog je uspešno obrisan.";
 $lang['function_disabled'] = "Ova opcija nije dostupna.";

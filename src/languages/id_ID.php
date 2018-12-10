@@ -65,9 +65,8 @@ $lang['email_activation_body'] = 'Halo,<br/><br/> Agar bisa login dengan akun An
 $lang['email_activation_altbody'] = 'Halo, ' . "\n\n" . 'Agar bisa login dengan akun Anda, pastikan melakukan aktivasi dengan klik link berikut ini :' . "\n" . '%1$s/%2$s' . "\n\n" . 'Anda harus menggunakan kunci aktivasi: %3$s' . "\n\n" . 'Jika kamu tidak pernah melakukan pendaftaran di %1$s berarti email ini kesalahan pengiriman abaikan saja';
 
 $lang['email_reset_subject'] = '%s - Permintaan reset password';
-$lang['email_reset_body'] = 'Hello,<br/><br/> Untuk melakukan reset password silahkan klik link ini: <br/><br/><strong><a href="%1$s/%2$s">%1$s/%2$s</a></strong><br/><br/>Anda harus menggunakan kunci aktivasi: <strong>%3$s</strong><br/><br/>
-Jika Anda tidak melakukan permintaan reset password pada on %1$s berarti email ini kesalahan pengiriman abaikan saja.';
-$lang['email_reset_altbody'] = 'Hello, ' . "\n\n" . 'Untuk melakukan reset password silahkan klik link ini :' . "\n" . '%1$s/%2$s' . "\n\n" . 'Anda harus menggunakan kunci aktivasi: %3$s' . "\n\n" . 'Jika Anda tidak melakukan permintaan reset password pada on %1$s berarti email ini kesalahan pengiriman abaikan saja..';
+$lang['email_reset_body'] = 'Hello,<br/><br/> Untuk melakukan reset password silahkan klik link ini: <br/><br/><strong><a href="%1$s/%2$s?key=%3$s">%1$s/%2$s?key=%3$s</a></strong><br/><br/>Jika Anda tidak melakukan permintaan reset password pada on %1$s berarti email ini kesalahan pengiriman abaikan saja.';
+$lang['email_reset_altbody'] = 'Hello, ' . "\n\n" . 'Untuk melakukan reset password silahkan klik link ini :' . "\n" . '%1$s/%2$s?key=%3$s' . "\n\n" . 'Jika Anda tidak melakukan permintaan reset password pada on %1$s berarti email ini kesalahan pengiriman abaikan saja..';
 
 $lang['account_deleted'] = "Akun sukses dihapus.";
 $lang['function_disabled'] = "Fungsi ini tidak di aktifkan.";

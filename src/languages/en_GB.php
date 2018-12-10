@@ -64,8 +64,8 @@ $lang['email_activation_body'] = 'Hello,<br/><br/> To be able to log in to your 
 $lang['email_activation_altbody'] = 'Hello, ' . "\n\n" . 'To be able to log in to your account you first need to activate your account by visiting the following link :' . "\n" . '%1$s/%2$s' . "\n\n" . 'You then need to use the following activation key: %3$s' . "\n\n" . 'If you did not sign up on %1$s recently then this message was sent in error, please ignore it.';
 
 $lang['email_reset_subject'] = '%s - Password reset request';
-$lang['email_reset_body'] = 'Hello,<br/><br/>To reset your password click the following link :<br/><br/><strong><a href="%1$s/%2$s">%1$s/%2$s</a></strong><br/><br/>You then need to use the following password reset key: <strong>%3$s</strong><br/><br/>If you did not request a password reset key on %1$s recently then this message was sent in error, please ignore it.';
-$lang['email_reset_altbody'] = 'Hello, ' . "\n\n" . 'To reset your password please visiting the following link :' . "\n" . '%1$s/%2$s' . "\n\n" . 'You then need to use the following password reset key: %3$s' . "\n\n" . 'If you did not request a password reset key on %1$s recently then this message was sent in error, please ignore it.';
+$lang['email_reset_body'] = 'Hello,<br/><br/>To reset your password click the following link :<br/><br/><strong><a href="%1$s/%2$s?key=%3$s">%1$s/%2$s?key=%3$s</a></strong><br/><br/>This link will expire 48 hours from the time it was requested.<br/><br/>If you did not request a password reset key on %1$s recently then this message was sent in error, please ignore it.';
+$lang['email_reset_altbody'] = 'Hello, ' . "\n\n" . 'To reset your password please visiting the following link :' . "\n" . '%1$s/%2$s?key=%3$s' . "\n\n" . 'This link will expire 48 hours from the time it was requested.' . "\n\n" . 'If you did not request a password reset key on %1$s recently then this message was sent in error, please ignore it.';
 
 $lang['account_deleted'] = "Account deleted successfully.";
 $lang['function_disabled'] = "This function has been disabled.";
