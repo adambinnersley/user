@@ -94,6 +94,18 @@ class User implements UserInterface{
         }
         return $this;
     }
+    
+    /**
+     * Sets the language from an array
+     * @param array $language This should be and array containing the array
+     * @return $this
+     */
+    public function setLanguageArray($language) {
+        if(is_array($language)){
+            $this->lang = $language;
+        }
+        return $this;
+    }
 
     /**
      * Logs a user in
