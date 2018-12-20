@@ -36,7 +36,7 @@ class User implements UserInterface{
     public $cookie_remember = '+1 year';
     
     protected $password_cost = 11;
-    protected $password_min_score = 2;
+    protected $password_min_score = 3;
     
     protected $request_key_expiration = '+2 days';
     
