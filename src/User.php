@@ -2,7 +2,6 @@
 /**
  * DBAL User class
  * @author Adam Binnersley
- * @version 1.0.0
  * @requires PHP 7.0 or greater
  */
 namespace UserAuth;
