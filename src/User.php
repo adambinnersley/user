@@ -3,7 +3,7 @@
  * DBAL User class
  * @author Adam Binnersley
  * @version 1.0.0
- * @requires PHP 5.4.0 or greater
+ * @requires PHP 7.0 or greater
  */
 namespace UserAuth;
 
@@ -37,7 +37,7 @@ class User implements UserInterface{
     public $cookie_remember = '+1 year';
     
     protected $password_cost = 11;
-    protected $password_min_score = 3;
+    protected $password_min_score = 2;
     
     protected $request_key_expiration = '+2 days';
     
