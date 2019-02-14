@@ -567,7 +567,7 @@ class User implements UserInterface{
         }
 
         if(!$this->db->delete($this->table_users, array('id' => $uid))) {
-            $return['message'] = $this->lang["system_error"] . " #05";
+            $return['message'] = $this->lang["system_error"] . " #04";
             return $return;
         }
         $this->db->delete($this->table_sessions, array('uid' => $uid));
@@ -616,19 +616,20 @@ class User implements UserInterface{
         
         $key = $this->getRandomKey(20);
         if(!$this->db->insert($this->table_requests, array('uid' => $uid, 'rkey' => $key, 'expire' => date("Y-m-d H:i:s", strtotime($this->request_key_expiration)), 'type' => $type))) {
-            $return['message'] = $this->lang["system_error"] . " #09";
+            $return['message'] = $this->lang["system_error"] . " #05";
             return $return;
         }
 
         if($sendmail === true) {
             if($type == "activation") {
                 $mailsent = sendEmail($email, sprintf($this->lang['email_activation_subject'], SITE_NAME), sprintf($this->lang['email_activation_body'], SITE_URL, $this->activation_page, $key), sprintf($this->lang['email_activation_altbody'], SITE_URL, $this->activation_page, $key), $this->emailFrom, $this->emailFromName);
-            }else{
+            }
+            elseif($type == "reset"){
                 $mailsent = sendEmail($email, sprintf($this->lang['email_reset_subject'], SITE_NAME), sprintf($this->lang['email_reset_body'], SITE_URL, $this->password_reset_page, $key), sprintf($this->lang['email_reset_altbody'], SITE_URL, $this->password_reset_page, $key), $this->emailFrom, $this->emailFromName);
             }
             if(!$mailsent) {
                 $this->deleteRequest($this->db->lastInsertId());
-                $return['message'] = $this->lang["system_error"] . " #10";
+                $return['message'] = $this->lang["system_error"] . " #06";
                 return $return;
             }
         }
@@ -791,7 +792,7 @@ class User implements UserInterface{
         if(!$user) {
             $this->addAttempt();
             $this->deleteRequest($data['id']);
-            $return['message'] = $this->lang["system_error"] . " #11";
+            $return['message'] = $this->lang["system_error"] . " #07";
 
             return $return;
         }
@@ -803,7 +804,7 @@ class User implements UserInterface{
         }
 
         if($this->db->update($this->table_users, array('password' => $this->getHash($password)), array('id' => $data['uid'])) === false) {
-            $return['message'] = $this->lang["system_error"] . " #12";
+            $return['message'] = $this->lang["system_error"] . " #08";
             return $return;
         }
 
@@ -896,7 +897,7 @@ class User implements UserInterface{
         $user = $this->getBaseUser($uid);
         if(empty($user)) {
             $this->addAttempt();
-            $return['message'] = $this->lang["system_error"] . " #13";
+            $return['message'] = $this->lang["system_error"] . " #09";
             return $return;
         }
 
@@ -945,7 +946,7 @@ class User implements UserInterface{
         $user = $this->getBaseUser($uid);
         if (empty($user)) {
             $this->addAttempt();
-            $return['message'] = $this->lang["system_error"] . " #14";
+            $return['message'] = $this->lang["system_error"] . " #10";
             return $return;
         }
 
@@ -962,7 +963,7 @@ class User implements UserInterface{
         }
 
         if($this->db->update($this->table_users, array('email' => $email), array('id' => $uid)) === false) {
-            $return['message'] = $this->lang["system_error"] . " #15";
+            $return['message'] = $this->lang["system_error"] . " #11";
             return $return;
         }
 
