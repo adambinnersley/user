@@ -95,6 +95,14 @@ class User implements UserInterface{
     }
     
     /**
+     * Returns the language array
+     * @return array The current language array will be returned
+     */
+    public function getLanguageArray(){
+        return $this->lang;
+    }
+    
+    /**
      * Sets the language from an array
      * @param array $language This should be and array containing the array
      * @return $this
