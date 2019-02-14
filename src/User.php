@@ -591,11 +591,6 @@ class User implements UserInterface{
         $return = array();
         $return['error'] = true;
 
-        if($type != "activation" && $type != "reset") {
-            $return['message'] = $this->lang["system_error"] . " #08";
-            return $return;
-        }
-
         if($sendmail === NULL) {
             $sendmail = true;
             if(($type == "reset" && $this->send_reset_email !== true) || ($type == "activation" && $this->send_activation_email !== true)) {
