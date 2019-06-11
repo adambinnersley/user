@@ -16,6 +16,8 @@ class User implements UserInterface{
     protected $userID;
     protected $userInfo;
     
+    protected $key;
+    
     protected $table_users = 'users';
     protected $table_sessions = 'sessions';
     protected $table_requests = 'requests';
@@ -622,18 +624,18 @@ class User implements UserInterface{
             return $return;
         }
         
-        $key = $this->getRandomKey(20);
-        if(!$this->db->insert($this->table_requests, array('uid' => $uid, 'rkey' => $key, 'expire' => date("Y-m-d H:i:s", strtotime($this->request_key_expiration)), 'type' => $type))) {
+        $this->key = $this->getRandomKey(20);
+        if(!$this->db->insert($this->table_requests, array('uid' => $uid, 'rkey' => $this->key, 'expire' => date("Y-m-d H:i:s", strtotime($this->request_key_expiration)), 'type' => $type))) {
             $return['message'] = $this->lang["system_error"] . " #05";
             return $return;
         }
 
         if($sendmail === true) {
             if($type == "activation") {
-                $mailsent = sendEmail($email, sprintf($this->lang['email_activation_subject'], SITE_NAME), sprintf($this->lang['email_activation_body'], SITE_URL, $this->activation_page, $key), sprintf($this->lang['email_activation_altbody'], SITE_URL, $this->activation_page, $key), $this->emailFrom, $this->emailFromName);
+                $mailsent = sendEmail($email, sprintf($this->lang['email_activation_subject'], SITE_NAME), sprintf($this->lang['email_activation_body'], SITE_URL, $this->activation_page, $this->key), sprintf($this->lang['email_activation_altbody'], SITE_URL, $this->activation_page, $this->key), $this->emailFrom, $this->emailFromName);
             }
             elseif($type == "reset"){
-                $mailsent = sendEmail($email, sprintf($this->lang['email_reset_subject'], SITE_NAME), sprintf($this->lang['email_reset_body'], SITE_URL, $this->password_reset_page, $key), sprintf($this->lang['email_reset_altbody'], SITE_URL, $this->password_reset_page, $key), $this->emailFrom, $this->emailFromName);
+                $mailsent = sendEmail($email, sprintf($this->lang['email_reset_subject'], SITE_NAME), sprintf($this->lang['email_reset_body'], SITE_URL, $this->password_reset_page, $this->key), sprintf($this->lang['email_reset_altbody'], SITE_URL, $this->password_reset_page, $this->key), $this->emailFrom, $this->emailFromName);
             }
             if(!$mailsent) {
                 $this->deleteRequest($this->db->lastInsertId());
