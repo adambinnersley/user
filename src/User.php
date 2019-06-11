@@ -489,7 +489,7 @@ class User implements UserInterface{
     * @param boolean|null $sendmail
     * @return int|array 
     */
-    protected function addUser($email, $password, $params = array(), &$sendmail) {
+    protected function addUser($email, $password, $params = array(), $sendmail) {
         $return = array();
         $return['error'] = true;
 
@@ -597,7 +597,7 @@ class User implements UserInterface{
     * @param boolean|null $sendmail = NULL
     * @return boolean
     */
-    protected function addRequest($uid, $email, $type, &$sendmail) {
+    protected function addRequest($uid, $email, $type, $sendmail) {
         $return = array();
         $return['error'] = true;
 
