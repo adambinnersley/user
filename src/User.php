@@ -632,10 +632,10 @@ class User implements UserInterface{
 
         if($sendmail === true) {
             if($type == "activation") {
-                $mailsent = sendEmail($email, sprintf($this->lang['email_activation_subject'], SITE_NAME), sprintf($this->lang['email_activation_body'], SITE_URL, $this->activation_page, $this->key), sprintf($this->lang['email_activation_altbody'], SITE_URL, $this->activation_page, $this->key), $this->emailFrom, $this->emailFromName);
+                $mailsent = sendEmail($email, sprintf($this->lang['email_activation_subject'], SITE_NAME), sprintf($this->lang['email_activation_altbody'], SITE_URL, $this->activation_page, $this->key), sprintf($this->lang['email_activation_body'], SITE_URL, $this->activation_page, $this->key), $this->emailFrom, $this->emailFromName);
             }
             elseif($type == "reset"){
-                $mailsent = sendEmail($email, sprintf($this->lang['email_reset_subject'], SITE_NAME), sprintf($this->lang['email_reset_body'], SITE_URL, $this->password_reset_page, $this->key), sprintf($this->lang['email_reset_altbody'], SITE_URL, $this->password_reset_page, $this->key), $this->emailFrom, $this->emailFromName);
+                $mailsent = sendEmail($email, sprintf($this->lang['email_reset_subject'], SITE_NAME), sprintf($this->lang['email_reset_altbody'], SITE_URL, $this->password_reset_page, $this->key), sprintf($this->lang['email_reset_body'], SITE_URL, $this->password_reset_page, $this->key), $this->emailFrom, $this->emailFromName);
             }
             if(!$mailsent) {
                 $this->deleteRequest($this->db->lastInsertId());
