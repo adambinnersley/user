@@ -21,7 +21,8 @@ if(!function_exists('sendEmail')){
             $mail->isSMTP();
             $mail->Host = SMTP_HOST;
             $mail->SMTPAuth = SMTP_AUTH;
-            if(!is_null(SMTP_AUTH)){
+            $mail->AuthType = SMTP_AUTHTYPE;
+            if(SMTP_AUTH == true){
                 $mail->Username = SMTP_USERNAME;
                 $mail->Password = SMTP_PASSWORD;
             }
@@ -29,6 +30,15 @@ if(!function_exists('sendEmail')){
             if(!is_null(SMTP_SECURITY)){
                 $mail->SMTPSecure = SMTP_SECURITY;
             }
+            $mail->smtpConnect(
+                [
+                    "ssl" => [
+                        "verify_peer" => false,
+                        "verify_peer_name" => false,
+                        "allow_self_signed" => true
+                    ]
+                ]
+            );
         }
         
         $mail->From = $from;
