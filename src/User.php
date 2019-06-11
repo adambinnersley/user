@@ -660,14 +660,14 @@ class User implements UserInterface{
         if(empty($request)) {
             $this->addAttempt();
             $return['message'] = $this->lang[$type."key_incorrect"];
-            return $request;
+            return $return;
         }
         
         if(strtotime(date("Y-m-d H:i:s")) > strtotime($request['expire'])) {
             $this->addAttempt();
             $this->deleteRequest($request['id']);
             $return['message'] = $this->lang[$type."key_expired"];
-            return $request;
+            return $return;
         }
         
         $return['error'] = false;
