@@ -15,7 +15,7 @@ class UserTest extends TestCase{
      * @covers \UserAuth\User::__construct
      * @covers \UserAuth\User::setLanguageFile
      */
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass(): void {
         self::$conn = new Database($GLOBALS['HOSTNAME'], $GLOBALS['USERNAME'], $GLOBALS['PASSWORD'], $GLOBALS['DATABASE'], false, false, true, $GLOBALS['DRIVER']);
         self::$conn->query(file_get_contents(dirname(dirname(__FILE__)).'/database/database_mysql.sql'));
         self::$conn->query(file_get_contents(dirname(__FILE__).'/database/database_mysql.sql'));
