@@ -604,7 +604,6 @@ class User implements UserInterface{
         if($sendmail === NULL) {
             $sendmail = true;
             if(($type == "reset" && $this->send_reset_email !== true) || ($type == "activation" && $this->send_activation_email !== true)) {
-                $sendmail = false;
                 $return['error'] = false;
                 return $return;
             }
