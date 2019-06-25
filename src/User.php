@@ -24,7 +24,7 @@ class User implements UserInterface{
     protected $table_attempts = 'attempts';
     
     protected $activation_page = 'activate';
-    protected $password_reset_page = 'reset';
+    protected $reset_page = 'reset';
     
     protected $attack_mitigation_time = '+30 minutes';
     protected $attempts_before_ban = 30;
@@ -125,7 +125,7 @@ class User implements UserInterface{
      * @return array $return
      */
     public function login($email, $password, $remember = true, $captcha = NULL) {
-        $return = array();
+        $return = [];
         $return['error'] = true;
         
         $block_status = $this->blockStatus($captcha);
@@ -176,7 +176,7 @@ class User implements UserInterface{
      * @return array|false If the information is correct the users information will be returned else will return false
      */
     protected function checkUsernamePassword($username, $password) {
-        $data = $this->db->select($this->table_users, array('email' => strtolower($username)));
+        $data = $this->db->select($this->table_users, ['email' => strtolower($username)]);
         if(empty($data)) {
             return false;
         }
@@ -194,7 +194,7 @@ class User implements UserInterface{
      */
     public function checkEmailExists($email) {
         if(filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            return $this->db->select($this->table_users, array('email' => $email), array('id'));
+            return $this->db->select($this->table_users, ['email' => $email], ['id']);
         }
         return false;
     }
@@ -209,8 +209,8 @@ class User implements UserInterface{
     * @param bool $sendmail = NULL
     * @return array $return
     */
-    public function register($email, $password, $repeatpassword, $params = array(), $captcha = NULL, $sendmail = NULL) {
-        $return = array();
+    public function register($email, $password, $repeatpassword, $params = [], $captcha = NULL, $sendmail = NULL) {
+        $return = [];
         $return['error'] = true;
         
         $block_status = $this->blockStatus($captcha);
@@ -259,7 +259,7 @@ class User implements UserInterface{
     * @return array $return
     */
     public function activate($key) {
-        $return = array();
+        $return = [];
         $return['error'] = true;
         if($this->isBlocked() == "block") {
             $return['message'] = $this->lang["user_blocked"];
@@ -285,7 +285,7 @@ class User implements UserInterface{
             return $return;
         }
         
-        $this->db->update($this->table_users, array('isactive' => 1), array('id' => $request['uid']));
+        $this->db->update($this->table_users, ['isactive' => 1], ['id' => $request['uid']]);
         $this->deleteRequest($request['id']);
         $this->deleteAttempts($this->getIp());
 
@@ -301,7 +301,7 @@ class User implements UserInterface{
     * @return array $return
     */
     public function requestReset($email, $sendmail = NULL) {
-        $return = array();
+        $return = [];
         $return['error'] = true;
 
         if($this->isBlocked() == "block") {
@@ -364,13 +364,11 @@ class User implements UserInterface{
         if(is_int($this->userID)) {
             return $this->userID;
         }
-        else{
-            $row = $this->checkEmailExists($email);
-            if(empty($row)) {
-                return false;
-            }
-            return $row['id'];
+        $row = $this->checkEmailExists($email);
+        if(empty($row)) {
+            return false;
         }
+        return $row['id'];
     }
 
     /**
@@ -383,7 +381,7 @@ class User implements UserInterface{
         if(!$this->getBaseUser($uid)) {
             return false;
         }
-        $data = array();
+        $data = [];
         $data['hash'] = sha1(SITE_KEY . microtime());
         if($remember === true) {
             $data['expire'] = date("Y-m-d H:i:s", strtotime($this->cookie_remember));
@@ -394,7 +392,7 @@ class User implements UserInterface{
             $data['expiretime'] = 0;
         }
 
-        if(!$this->db->insert($this->table_sessions, array('uid' => $uid, 'hash' => $data['hash'], 'expiredate' => $data['expire'], 'ip' => $this->getIp(), 'agent' => (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''), 'cookie_crc' => sha1($data['hash'] . SITE_KEY)))) {
+        if(!$this->db->insert($this->table_sessions, ['uid' => $uid, 'hash' => $data['hash'], 'expiredate' => $data['expire'], 'ip' => $this->getIp(), 'agent' => (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''), 'cookie_crc' => sha1($data['hash'] . SITE_KEY)])) {
             return false;
         }
         setcookie($this->cookie_name, $data['hash'], strtotime($data['expire']), '/', '', (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? true : false), true);
@@ -409,7 +407,7 @@ class User implements UserInterface{
     * @return boolean
     */
     protected function deleteExistingSessions($uid) {
-        return $this->db->delete($this->table_sessions, array('uid' => $uid));
+        return $this->db->delete($this->table_sessions, ['uid' => $uid]);
     }
     
     /**
@@ -418,7 +416,7 @@ class User implements UserInterface{
     * @return boolean
     */
     protected function deleteSession($hash) {
-        return $this->db->delete($this->table_sessions, array('hash' => $hash));
+        return $this->db->delete($this->table_sessions, ['hash' => $hash]);
     }
 
     /**
@@ -435,7 +433,7 @@ class User implements UserInterface{
             return false;
         }
 
-        $row = $this->db->select($this->table_sessions, array('hash' => $hash));
+        $row = $this->db->select($this->table_sessions, ['hash' => $hash]);
         if(empty($row)) {
             return false;
         }
@@ -462,11 +460,7 @@ class User implements UserInterface{
     * @return int|false
     */
     public function getSessionUID($hash) {
-        $row = $this->db->select($this->table_sessions, array('hash' => $hash) , array('uid'));
-        if(empty($row)) {
-            return false;
-        }
-        return $row['uid'];
+        return $this->db->fetchColumn($this->table_sessions, ['hash' => $hash], ['uid']);
     }
     
      /**
@@ -475,7 +469,7 @@ class User implements UserInterface{
     * @return boolean
     */
     public function isEmailTaken($email) {
-        if($this->db->count($this->table_users, array('email' => $email)) == 0) {
+        if($this->db->count($this->table_users, ['email' => $email]) == 0) {
             return false;
         }
         return true;
@@ -489,12 +483,12 @@ class User implements UserInterface{
     * @param boolean|null $sendmail
     * @return int|array 
     */
-    protected function addUser($email, $password, $params = array(), $sendmail) {
-        $return = array();
+    protected function addUser($email, $password, $params = [], $sendmail) {
+        $return = [];
         $return['error'] = true;
 
         $safeemail = htmlentities(strtolower($email));
-        $requiredParams = array('email' => $safeemail, 'password' => $this->getHash($password), 'isactive' => ($sendmail ? 0 : 1));
+        $requiredParams = ['email' => $safeemail, 'password' => $this->getHash($password), 'isactive' => ($sendmail ? 0 : 1)];
         if(is_array($params)&& count($params) > 0) {
             $setParams = array_merge($requiredParams, $params);
         }
@@ -518,7 +512,7 @@ class User implements UserInterface{
     * @return array $data
     */
     protected function getBaseUser($uid) {
-        $data = $this->db->select($this->table_users, array('id' => $uid), array('email', 'password', 'isactive'));
+        $data = $this->db->select($this->table_users, ['id' => $uid], ['email', 'password', 'isactive']);
         if(empty($data)) {
             return false;
         }
@@ -534,7 +528,7 @@ class User implements UserInterface{
     */
     public function getUser($uid) {
         if(is_integer($uid)) {
-            $data = $this->db->select($this->table_users, array('id' => $uid));
+            $data = $this->db->select($this->table_users, ['id' => $uid]);
             if(empty($data)) {
                 return false;
             }
@@ -553,7 +547,7 @@ class User implements UserInterface{
     * @return array $return
     */
     public function deleteUser($uid, $password, $captcha = NULL) {
-        $return = array();
+        $return = [];
         $return['error'] = true;
 
         $block_status = $this->blockStatus($captcha);
@@ -576,12 +570,12 @@ class User implements UserInterface{
             return $return;
         }
 
-        if(!$this->db->delete($this->table_users, array('id' => $uid))) {
+        if(!$this->db->delete($this->table_users, ['id' => $uid])) {
             $return['message'] = $this->lang["system_error"] . " #04";
             return $return;
         }
-        $this->db->delete($this->table_sessions, array('uid' => $uid));
-        $this->db->delete($this->table_requests, array('uid' => $uid));
+        $this->db->delete($this->table_sessions, ['uid' => $uid]);
+        $this->db->delete($this->table_requests, ['uid' => $uid]);
 
         $return['error'] = false;
         $return['message'] = $this->lang["account_deleted"];
@@ -598,7 +592,7 @@ class User implements UserInterface{
     * @return boolean
     */
     protected function addRequest($uid, $email, $type, $sendmail) {
-        $return = array();
+        $return = [];
         $return['error'] = true;
 
         if($sendmail === NULL) {
@@ -609,7 +603,7 @@ class User implements UserInterface{
             }
         }
 
-        $row = $this->db->select($this->table_requests, array('uid' => $uid, 'type' => $type), array('id', 'expire'));
+        $row = $this->db->select($this->table_requests, ['uid' => $uid, 'type' => $type], ['id', 'expire']);
         if(!empty($row)) {
             if(strtotime(date("Y-m-d H:i:s")) < strtotime($row['expire'])) {
                 $return['message'] = $this->lang["reset_exists"];
@@ -624,18 +618,14 @@ class User implements UserInterface{
         }
         
         $this->key = $this->getRandomKey(20);
-        if(!$this->db->insert($this->table_requests, array('uid' => $uid, 'rkey' => $this->key, 'expire' => date("Y-m-d H:i:s", strtotime($this->request_key_expiration)), 'type' => $type))) {
+        if(!$this->db->insert($this->table_requests, ['uid' => $uid, 'rkey' => $this->key, 'expire' => date("Y-m-d H:i:s", strtotime($this->request_key_expiration)), 'type' => $type])) {
             $return['message'] = $this->lang["system_error"] . " #05";
             return $return;
         }
 
         if($sendmail === true) {
-            if($type == "activation") {
-                $mailsent = sendEmail($email, sprintf($this->lang['email_activation_subject'], SITE_NAME), sprintf($this->lang['email_activation_altbody'], SITE_URL, $this->activation_page, $this->key), sprintf($this->lang['email_activation_body'], SITE_URL, $this->activation_page, $this->key), $this->emailFrom, $this->emailFromName);
-            }
-            elseif($type == "reset"){
-                $mailsent = sendEmail($email, sprintf($this->lang['email_reset_subject'], SITE_NAME), sprintf($this->lang['email_reset_altbody'], SITE_URL, $this->password_reset_page, $this->key), sprintf($this->lang['email_reset_body'], SITE_URL, $this->password_reset_page, $this->key), $this->emailFrom, $this->emailFromName);
-            }
+            $string = $type.'_page';
+            $mailsent = sendEmail($email, sprintf($this->lang['email_'.$type.'_subject'], SITE_NAME), sprintf($this->lang['email_'.$type.'_altbody'], SITE_URL, $this->{$string}, $this->key), sprintf($this->lang['email_'.$type.'_body'], SITE_URL, $this->{$string}, $this->key), $this->emailFrom, $this->emailFromName);
             if(!$mailsent) {
                 $this->deleteRequest($this->db->lastInsertId());
                 $return['message'] = $this->lang["system_error"] . " #06";
@@ -651,13 +641,13 @@ class User implements UserInterface{
     * Returns request data if key is valid
     * @param string $key
     * @param string $type
-    * @return array $return
+    * @return array
     */
     public function getRequest($key, $type) {
-        $return = array();
+        $return = [];
         $return['error'] = true;
         
-        $request = $this->db->select($this->table_requests, array('rkey' => $key, 'type' => $type), array('id', 'uid', 'expire'));
+        $request = $this->db->select($this->table_requests, ['rkey' => $key, 'type' => $type], ['id', 'uid', 'expire']);
         if(empty($request)) {
             $this->addAttempt();
             $return['message'] = $this->lang[$type."key_incorrect"];
@@ -672,9 +662,7 @@ class User implements UserInterface{
         }
         
         $return['error'] = false;
-        $return['id'] = $request['id'];
-        $return['uid'] = $request['uid'];
-        return $return;
+        return array_merge($return, $request);
     }
     
     /**
@@ -683,7 +671,7 @@ class User implements UserInterface{
     * @return boolean
     */
     protected function deleteRequest($id) {
-        return $this->db->delete($this->table_requests, array('id' => $id));
+        return $this->db->delete($this->table_requests, ['id' => $id]);
     }
     
     /**
@@ -692,7 +680,7 @@ class User implements UserInterface{
     * @return array $return
     */
     protected function validatePassword($password) {
-        $return = array();
+        $return = [];
         $return['error'] = true;
         if(strlen($password) < 5) {
             $return['message'] = $this->lang["password_short"];
@@ -709,7 +697,7 @@ class User implements UserInterface{
      * @return array|boolean If the password doe not meet the minimum requirements will return an array containing the error message else will return false
      */
     protected function minPasswordStrength($password) {
-        $return = array();
+        $return = [];
         $strength = new PasswordStrength();
         if($strength->passwordStrength($password)['score'] < intval($this->password_min_score)) {
             $return['message'] = $this->lang['password_weak'];
@@ -724,7 +712,7 @@ class User implements UserInterface{
     * @return array $return
     */
     protected function validateEmail($email) {
-        $return = array();
+        $return = [];
         $return['error'] = true;
 
         if(strlen($email) < 5) {
@@ -760,7 +748,7 @@ class User implements UserInterface{
     * @return array $return
     */
     public function resetPass($key, $password, $repeatpassword, $captcha = NULL) {
-        $return = array();
+        $return = [];
         $return['error'] = true;
         
         $block_status = $this->blockStatus($captcha);
@@ -812,7 +800,7 @@ class User implements UserInterface{
             return $return;
         }
 
-        if($this->db->update($this->table_users, array('password' => $this->getHash($password)), array('id' => $data['uid'])) === false) {
+        if($this->db->update($this->table_users, ['password' => $this->getHash($password)], ['id' => $data['uid']]) === false) {
             $return['message'] = $this->lang["system_error"] . " #08";
             return $return;
         }
@@ -829,7 +817,7 @@ class User implements UserInterface{
     * @return array $return
     */
     public function resendActivation($email) {
-        $return = array();
+        $return = [];
         $return['error'] = true;
 
         if($this->isBlocked() == "block") {
@@ -878,7 +866,7 @@ class User implements UserInterface{
     * @return array $return
     */
     public function changePassword($uid, $currpass, $newpass, $repeatnewpass, $captcha = NULL) {
-        $return = array();
+        $return = [];
         $return['error'] = true;
         
         $block_status = $this->blockStatus($captcha);
@@ -916,7 +904,7 @@ class User implements UserInterface{
             return $return;
         }
 
-        $this->db->update($this->table_users, array('password' => $this->getHash($newpass)), array('id' => $uid));
+        $this->db->update($this->table_users, ['password' => $this->getHash($newpass)], ['id' => $uid]);
         $return['error'] = false;
         $return['message'] = $this->lang["password_changed"];
         return $return;
@@ -931,7 +919,7 @@ class User implements UserInterface{
     * @return array $return
     */
     public function changeEmail($uid, $email, $password, $captcha = NULL) {
-        $return = array();
+        $return = [];
         $return['error'] = true;
         
         $block_status = $this->blockStatus($captcha);
@@ -971,7 +959,7 @@ class User implements UserInterface{
             return $return;
         }
 
-        if($this->db->update($this->table_users, array('email' => $email), array('id' => $uid)) === false) {
+        if($this->db->update($this->table_users, ['email' => $email], ['id' => $uid]) === false) {
             $return['message'] = $this->lang["system_error"] . " #11";
             return $return;
         }
@@ -988,7 +976,7 @@ class User implements UserInterface{
     public function isBlocked() {
         $ip = $this->getUserIP();
         $this->deleteAttempts($ip, false);
-        $attempts = $this->db->count($this->table_attempts, array('ip' => $ip), false);
+        $attempts = $this->db->count($this->table_attempts, ['ip' => $ip], false);
         if($attempts < intval($this->attempts_before_verify)) {
             return "allow";
         }
@@ -1071,7 +1059,7 @@ class User implements UserInterface{
      * @return boolean
      */
     protected function addAttempt() {
-        return $this->db->insert($this->table_attempts, array('ip' => $this->getUserIP(), 'expirydate' => date("Y-m-d H:i:s", strtotime($this->attack_mitigation_time))));
+        return $this->db->insert($this->table_attempts, ['ip' => $this->getUserIP(), 'expirydate' => date("Y-m-d H:i:s", strtotime($this->attack_mitigation_time))]);
     }
     
     /**
@@ -1082,9 +1070,9 @@ class User implements UserInterface{
      */
     protected function deleteAttempts($ip, $all = true) {
         if($all === true) {
-            return $this->db->delete($this->table_attempts, array('ip' => $ip));
+            return $this->db->delete($this->table_attempts, ['ip' => $ip]);
         }
-        return $this->db->delete($this->table_attempts, array('ip' => $ip, 'expirydate' => array('<=', date("Y-m-d H:i:s"))));
+        return $this->db->delete($this->table_attempts, ['ip' => $ip, 'expirydate' => ['<=', date("Y-m-d H:i:s")]]);
     }
     
     /**
@@ -1109,9 +1097,7 @@ class User implements UserInterface{
         if(isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] != '') {
             return $_SERVER['HTTP_X_FORWARDED_FOR'];
         }
-        else{
-            return $_SERVER['REMOTE_ADDR'];
-        }
+        return $_SERVER['REMOTE_ADDR'];
     }
     
     /**
@@ -1137,7 +1123,7 @@ class User implements UserInterface{
      * @return bool
      */
     public function comparePasswords($userid, $password_for_check) {
-        $data = $this->db->select($this->table_users, array('id' => $userid), array('password'));
+        $data = $this->db->select($this->table_users, ['id' => $userid], ['password']);
         if(empty($data)) {
             return false;
         }
@@ -1151,7 +1137,7 @@ class User implements UserInterface{
      */
     protected function setLastLogin($userid) {
         if(is_numeric($userid)) {
-            return $this->db->update($this->table_users, array('last_login' => date('Y-m-d H:i:s')),  array('id' => intval($userid)));
+            return $this->db->update($this->table_users, ['last_login' => date('Y-m-d H:i:s')], ['id' => intval($userid)]);
         }
         return false;
     }
@@ -1165,16 +1151,14 @@ class User implements UserInterface{
         if(is_array($this->userInfo) && !is_numeric($userID)) {
             return $this->userInfo;
         }
-        else{
-            if(is_numeric($userID)) {
-                return $this->getUser(intval($userID));
-            }
-            $userInfo = $this->getUser(intval($this->getUserID()));
-            if(!empty($userInfo)) {
-                $this->userInfo = $userInfo;
-                $this->userID = $userInfo['id'];
-                return $this->userInfo;
-            }
+        if(is_numeric($userID)) {
+            return $this->getUser(intval($userID));
+        }
+        $userInfo = $this->getUser(intval($this->getUserID()));
+        if(!empty($userInfo)) {
+            $this->userInfo = $userInfo;
+            $this->userID = $userInfo['id'];
+            return $this->userInfo;
         }
         return false;
     }
