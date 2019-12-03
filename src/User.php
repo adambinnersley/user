@@ -993,8 +993,8 @@ class User implements UserInterface{
      */
     protected function blockStatus($captcha) {
         $block_status = $this->isBlocked();
-        if ($block_status == "verify") {
-            if ($this->checkCaptcha($captcha) === false) {
+        if ($block_status == "verify" && $captcha !== NULL) {
+            if ($this->checkCaptcha($captcha) == false) {
                 return $this->lang["user_verify_failed"];
             }
         }
