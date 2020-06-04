@@ -263,7 +263,6 @@ class User implements UserInterface{
         $return['error'] = true;
         if($this->isBlocked() == "block") {
             $return['message'] = $this->lang["user_blocked"];
-
             return $return;
         }
         if(strlen($key) !== 20) {
@@ -287,7 +286,6 @@ class User implements UserInterface{
         
         $this->db->update($this->table_users, ['isactive' => 1], ['id' => $request['uid']]);
         $this->deleteRequest($request['id']);
-        $this->deleteAttempts($this->getIp());
 
         $return['error'] = false;
         $return['message'] = $this->lang["account_activated"];
@@ -448,6 +446,7 @@ class User implements UserInterface{
         }
 
         if($row['cookie_crc'] == sha1($hash . SITE_KEY)) {
+            $this->userID = $row['uid'];
             return true;
         }
 
