@@ -159,7 +159,7 @@ class User implements UserInterface{
             return $return;
         }
 
-        $this->userID = $user['id'];
+        $this->userID = intval($user['id']);
         $return['error'] = false;
         $return['message'] = $this->lang["logged_in"];
         $return['hash'] = $sessiondata['hash'];
@@ -442,7 +442,7 @@ class User implements UserInterface{
         }
 
         if($row['cookie_crc'] == sha1($hash . SITE_KEY)) {
-            $this->userID = $row['uid'];
+            $this->userID = intval($row['uid']);
             return true;
         }
 
@@ -1152,7 +1152,7 @@ class User implements UserInterface{
         $userInfo = $this->getUser(intval($this->getUserID()));
         if(!empty($userInfo)) {
             $this->userInfo = $userInfo;
-            $this->userID = $userInfo['id'];
+            $this->userID = intval($userInfo['id']);
             return $this->userInfo;
         }
         return false;
@@ -1163,7 +1163,7 @@ class User implements UserInterface{
      * @return int This should be the users unique ID if logged in else will be 0
      */
     public function getUserID() {
-        if(is_int($this->userID)) {
+        if(is_int($this->userID) && $this->userID > 0) {
             return $this->userID;
         }
         elseif($this->isLogged()) {
