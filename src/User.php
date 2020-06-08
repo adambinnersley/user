@@ -423,10 +423,6 @@ class User implements UserInterface{
     * @return boolean
     */
     public function checkSession($hash) {
-        if($this->isBlocked() == "block") {
-            return false;
-        }
-
         if(strlen($hash) != 40) {
             return false;
         }
