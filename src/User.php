@@ -437,10 +437,6 @@ class User implements UserInterface{
             return false;
         }
 
-        if($this->getIp() != $row['ip']) {
-            return false;
-        }
-
         if($row['cookie_crc'] == sha1($hash . SITE_KEY)) {
             $this->userID = intval($row['uid']);
             return true;
@@ -1100,7 +1096,10 @@ class User implements UserInterface{
     * @return boolean
     */
     public function isLogged() {
-        return (isset($_COOKIE[$this->cookie_name]) && $this->checkSession($_COOKIE[$this->cookie_name]));
+        if(isset($_COOKIE[$this->cookie_name])) {
+            return $this->checkSession($_COOKIE[$this->cookie_name]);
+        }
+        return false;
     }
     
     /**
