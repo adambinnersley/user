@@ -224,22 +224,24 @@ class User implements UserInterface{
             return $return;
         }
 
-        $validateInfo = $this->validateEmailPassword($email, $password);
-        if($validateInfo !== false) {
-            $return['message'] = $validateInfo;
-            return $return;
-        }
-
         $strength = $this->minPasswordStrength($password);
         if($strength !== false) {
             $return['message'] = $strength['message'];
             return $return;
         }
+        
+        if(!is_null($email)){
+            $validateInfo = $this->validateEmailPassword($email, $password);
+            if($validateInfo !== false) {
+                $return['message'] = $validateInfo;
+                return $return;
+            }
 
-        if ($this->isEmailTaken($email)) {
-            $this->addAttempt();
-            $return['message'] = $this->lang["email_taken"];
-            return $return;
+            if ($this->isEmailTaken($email)) {
+                $this->addAttempt();
+                $return['message'] = $this->lang["email_taken"];
+                return $return;
+            }
         }
 
         $addUser = $this->addUser($email, $password, $params, $sendmail);
