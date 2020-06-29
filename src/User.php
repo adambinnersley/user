@@ -441,6 +441,7 @@ class User implements UserInterface{
 
         if($row['cookie_crc'] == sha1($hash . SITE_KEY)) {
             $this->userID = intval($row['uid']);
+            $this->setLastLogin($row['uid']);
             return true;
         }
 
