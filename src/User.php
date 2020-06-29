@@ -1086,7 +1086,7 @@ class User implements UserInterface{
     * Returns IP address
     * @return string $ip
     */
-    protected function getIp() {
+    public function getIp() {
         if(isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] != '') {
             return $_SERVER['HTTP_X_FORWARDED_FOR'];
         }
@@ -1131,7 +1131,7 @@ class User implements UserInterface{
      * @param int $userid This should be the users ID
      * @return boolean If the field has been updated will return true else returns false
      */
-    protected function setLastLogin($userid) {
+    public function setLastLogin($userid) {
         if(is_numeric($userid)) {
             return $this->db->update($this->table_users, ['last_login' => date('Y-m-d H:i:s')], ['id' => intval($userid)]);
         }
