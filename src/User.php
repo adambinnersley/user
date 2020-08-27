@@ -481,7 +481,7 @@ class User implements UserInterface{
         $return = [];
         $return['error'] = true;
 
-        $safeemail = htmlentities(strtolower($email));
+        $safeemail = (is_null($email) ? NULL : htmlentities(strtolower($email)));
         $requiredParams = ['email' => $safeemail, 'password' => $this->getHash($password), 'isactive' => ($sendmail ? 0 : 1)];
         if(is_array($params)&& count($params) > 0) {
             $setParams = array_merge($requiredParams, $params);
