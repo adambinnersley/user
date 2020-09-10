@@ -378,10 +378,10 @@ class User implements UserInterface{
     * @return array $data
     */
     protected function addSession($uid, $remember) {
-        if(!$this->getBaseUser($uid)) {
+        $data = $this->getBaseUser($uid);
+        if($data === false) {
             return false;
         }
-        $data = [];
         $data['hash'] = sha1(SITE_KEY . microtime());
         if($remember === true) {
             $data['expire'] = date("Y-m-d H:i:s", strtotime($this->cookie_remember));
@@ -396,7 +396,7 @@ class User implements UserInterface{
             return false;
         }
         setcookie($this->cookie_name, $data['hash'], strtotime($data['expire']), '/', '', (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? true : false), true);
-        $this->setLastLogin($uid);
+        $this->setLastLogin($uid, date('Y-m-d', strtotime($data['last_login'])));
         
         return $data;
     }
@@ -506,7 +506,7 @@ class User implements UserInterface{
     * @return array $data
     */
     protected function getBaseUser($uid) {
-        $data = $this->db->select($this->table_users, ['id' => $uid], ['email', 'password', 'isactive']);
+        $data = $this->db->select($this->table_users, ['id' => $uid], ['email', 'password', 'isactive', 'last_login']);
         if(empty($data)) {
             return false;
         }
@@ -1132,8 +1132,11 @@ class User implements UserInterface{
      * @param int $userid This should be the users ID
      * @return boolean If the field has been updated will return true else returns false
      */
-    public function setLastLogin($userid) {
-        if(is_numeric($userid)) {
+    public function setLastLogin($userid, $date = false) {
+        if($date === false){
+            $date = date('Y-m-d', strtotime($this->getBaseUser($userid)['last_login']));
+        }
+        if(is_numeric($userid) && $date !== date('Y-m-d')) {
             return $this->db->update($this->table_users, ['last_login' => date('Y-m-d H:i:s')], ['id' => intval($userid)]);
         }
         return false;
