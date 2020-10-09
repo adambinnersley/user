@@ -1,54 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/8.1/phpunit.xsd"
-         bootstrap="vendor/autoload.php"
-         forceCoversAnnotation="true"
-         beStrictAboutCoversAnnotation="true"
-         beStrictAboutOutputDuringTests="true"
-         beStrictAboutTodoAnnotatedTests="true"
-         verbose="true"
-         stderr="true">
-    <testsuites>
-        <testsuite name="default">
-            <directory suffix="Test.php">tests</directory>
-        </testsuite>
-    </testsuites>
-
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">src</directory>
-            <exclude>
-                <directory suffix=".php">src/languages</directory>
-            </exclude>
-        </whitelist>
-    </filter>
-    
-    <logging>
-        <log type="coverage-clover" target="clover.xml"/>
-    </logging>
-    
-    <php>
-        <var name="HOSTNAME" value="localhost"/>
-        <var name="USERNAME" value="root"/>
-        <var name="PASSWORD" value=""/>
-        <var name="DATABASE" value="user"/>
-        <var name="DRIVER" value="mysql"/>
-        
-    	<server name="REMOTE_ADDR" value="127.0.0.1" />
-        <server name="HTTP_USER_AGENT" value="PHPUnit Test Browser" />
-        
-        <const name="SITE_NAME" value="PHPUNITTEST" />
-        <const name="SITE_URL" value="http://localhost" />
-        <const name="SITE_KEY" value="fghuior.)/!/jdUkd8s2!7HVHG7777ghg" />
-        
-        <const name="USE_SMTP" value="0" />
-        <const name="SMTP_AUTH" value="0" />
-        <const name="SMTP_DEBUG" value="0" />
-        <const name="SMTP_SECURITY" value="NULL" />
-
-        <const name="SMTP_HOST" value="smtp.example.com" />
-        <const name="SMTP_PORT" value="25" />
-        <const name="SMTP_USERNAME" value="email@example.com" />
-        <const name="SMTP_PASSWORD" value="password" />
-    </php>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd" bootstrap="vendor/autoload.php" forceCoversAnnotation="true" beStrictAboutCoversAnnotation="true" beStrictAboutOutputDuringTests="true" beStrictAboutTodoAnnotatedTests="true" verbose="true" stderr="true">
+  <coverage processUncoveredFiles="true">
+    <include>
+      <directory suffix=".php">src</directory>
+    </include>
+    <exclude>
+      <directory suffix=".php">src/languages</directory>
+    </exclude>
+    <report>
+      <clover outputFile="clover.xml"/>
+    </report>
+  </coverage>
+  <testsuites>
+    <testsuite name="default">
+      <directory suffix="Test.php">tests</directory>
+    </testsuite>
+  </testsuites>
+  <logging/>
+  <php>
+    <var name="HOSTNAME" value="localhost"/>
+    <var name="USERNAME" value="root"/>
+    <var name="PASSWORD" value=""/>
+    <var name="DATABASE" value="user"/>
+    <var name="DRIVER" value="mysql"/>
+    <server name="REMOTE_ADDR" value="127.0.0.1"/>
+    <server name="HTTP_USER_AGENT" value="PHPUnit Test Browser"/>
+    <const name="SITE_NAME" value="PHPUNITTEST"/>
+    <const name="SITE_URL" value="http://localhost"/>
+    <const name="SITE_KEY" value="fghuior.)/!/jdUkd8s2!7HVHG7777ghg"/>
+    <const name="USE_SMTP" value="0"/>
+    <const name="SMTP_AUTH" value="0"/>
+    <const name="SMTP_DEBUG" value="0"/>
+    <const name="SMTP_SECURITY" value="NULL"/>
+    <const name="SMTP_HOST" value="smtp.example.com"/>
+    <const name="SMTP_PORT" value="25"/>
+    <const name="SMTP_USERNAME" value="email@example.com"/>
+    <const name="SMTP_PASSWORD" value="password"/>
+  </php>
 </phpunit>

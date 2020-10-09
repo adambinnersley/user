@@ -4,9 +4,10 @@ namespace UserAuth\Tests;
 
 use DBAL\Database;
 use UserAuth\User;
-Use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\TestCase;
 
-class UserTest extends TestCase{
+class UserTest extends TestCase
+{
     
     protected static $conn;
     protected static $user;
@@ -15,7 +16,8 @@ class UserTest extends TestCase{
      * @covers \UserAuth\User::__construct
      * @covers \UserAuth\User::setLanguageFile
      */
-    public static function setUpBeforeClass(): void {
+    public static function setUpBeforeClass(): void
+    {
         self::$conn = new Database($GLOBALS['HOSTNAME'], $GLOBALS['USERNAME'], $GLOBALS['PASSWORD'], $GLOBALS['DATABASE'], false, false, true, $GLOBALS['DRIVER']);
         self::$conn->query(file_get_contents(dirname(dirname(__FILE__)).'/database/database_mysql.sql'));
         self::$conn->query(file_get_contents(dirname(__FILE__).'/database/database_mysql.sql'));
@@ -29,7 +31,8 @@ class UserTest extends TestCase{
      * @covers \UserAuth\User::__get
      * @covers \UserAuth\User::__set
      */
-    public function testGettersAndSetters(){
+    public function testGettersAndSetters()
+    {
         $this->assertEquals(3, self::$user->password_min_score);
         self::$user->password_min_score = 4;
         $this->assertEquals(4, self::$user->password_min_score);
@@ -40,7 +43,8 @@ class UserTest extends TestCase{
      * @covers \UserAuth\User::__construct
      * @covers \UserAuth\User::setLanguageFile
      */
-    public function testSetLang(){
+    public function testSetLang()
+    {
         $setLang = self::$user->setLanguageFile(dirname(dirname(__FILE__))."languages/en_GB.php");
         $this->assertObjectHasAttribute('lang', $setLang);
         $this->assertArrayHasKey('user_blocked', self::$user->lang);
@@ -63,7 +67,8 @@ class UserTest extends TestCase{
      * @covers \UserAuth\User::getUserIP
      * @covers \UserAuth\User::getIP
      */
-    public function testRegister(){
+    public function testRegister()
+    {
         // Successful registration
         $this->assertFalse(self::$user->register('test@email.com', 'T3H-1337-P@$$', 'T3H-1337-P@$$')['error']);
         // Failed registration: same email
@@ -97,9 +102,10 @@ class UserTest extends TestCase{
      * @covers \UserAuth\User::getRequest
      * @covers \UserAuth\User::deleteRequest
      */
-    public function testActivateUser(){
+    public function testActivateUser()
+    {
         self::$user->send_activation_email = false;
-        $this->assertFalse(self::$user->register('activate@email.com', 'T3H-1337-P@$$', 'T3H-1337-P@$$', array(), NULL, true)['error']);
+        $this->assertFalse(self::$user->register('activate@email.com', 'T3H-1337-P@$$', 'T3H-1337-P@$$', array(), null, true)['error']);
         
         $key = self::$user->getRandomKey(20);
         $this->assertEquals(20, strlen($key));
@@ -127,7 +133,8 @@ class UserTest extends TestCase{
      * @covers \UserAuth\User::getUserIP
      * @covers \UserAuth\User::getIP
      */
-    public function testLogin(){
+    public function testLogin()
+    {
         // Successful login
         $this->assertFalse(self::$user->login("test@email.com", 'T3H-1337-P@$$')['error']);
         // Failed login: incorrect email
@@ -144,8 +151,11 @@ class UserTest extends TestCase{
      * @covers \UserAuth\User::getUserIP
      * @covers \UserAuth\User::getIP
      * @covers \UserAuth\User::isBlocked
+     * @covers \UserAuth\User::getBaseUser
+     * @covers \UserAuth\User::setLastLogin
      */
-    public function testCheckSession(){
+    public function testCheckSession()
+    {
         // Get the user's (created and logged in as earlier) session hash
         $uid = self::$conn->select(self::$user->table_users, array('email' => 'test@email.com'))['id'];
         $hash = self::$conn->select(self::$user->table_sessions, array('uid' => $uid))['hash'];
@@ -162,7 +172,8 @@ class UserTest extends TestCase{
      * @covers \UserAuth\User::getSessionUID
      * @covers \UserAuth\User::__get
      */
-    public function testGetSessionUID(){
+    public function testGetSessionUID()
+    {
         $uid = self::$conn->select(self::$user->table_users, array('email' => 'test@email.com'))['id'];
         $hash = self::$conn->select(self::$user->table_sessions, array('uid' => $uid))['hash'];
         // Successful getSessionUID
@@ -188,7 +199,8 @@ class UserTest extends TestCase{
      * @covers \UserAuth\User::addAttempt
      * @covers \UserAuth\User::checkCaptcha
      */
-    public function testResetPassword(){
+    public function testResetPassword()
+    {
         $uid = self::$conn->select(self::$user->table_users, array('email' => 'test@email.com'))['id'];
         // Successful changePassword
         $this->assertFalse(self::$user->changePassword($uid, 'T3H-1337-P@$$', 'T3H-1337-P@$$2', 'T3H-1337-P@$$2')['error']);
@@ -208,7 +220,8 @@ class UserTest extends TestCase{
      * @covers \UserAuth\User::isEmailTaken
      * @covers \UserAuth\User::checkEmailExists
      */
-    public function testIsEmailTaken(){
+    public function testIsEmailTaken()
+    {
         $this->assertTrue(self::$user->isEmailTaken("test@email.com"));
         $this->assertFalse(self::$user->isEmailTaken("unused@email.com"));
         $this->assertArrayHasKey('id', self::$user->checkEmailExists("test@email.com"));
@@ -222,7 +235,8 @@ class UserTest extends TestCase{
      * @covers \UserAuth\User::getSessionUID
      * @covers \UserAuth\User::getSessionHash
      */
-    public function testGetUserInfo(){
+    public function testGetUserInfo()
+    {
         $userInfo = self::$user->getUserInfo(1);
         $this->assertEquals('test@email.com', $userInfo['email']);
     }
@@ -232,7 +246,8 @@ class UserTest extends TestCase{
      * @covers \UserAuth\User::deleteSession
      * @covers \UserAuth\User::__get
      */
-    public function testLogout(){
+    public function testLogout()
+    {
         $uid = self::$conn->select(self::$user->table_users, array('email' => 'test@email.com'))['id'];
         $hash = self::$conn->select(self::$user->table_sessions, array('uid' => $uid))['hash'];
         // Successful logout
@@ -255,7 +270,8 @@ class UserTest extends TestCase{
      * @covers \UserAuth\User::isBlocked
      * @covers \UserAuth\User::validatePassword
      */
-    public function testDeleteUser() {
+    public function testDeleteUser()
+    {
         // Empty attempts table
         self::$conn->delete(self::$user->table_attempts, array('id' => array('>=', 1)));
         $uid = self::$conn->select(self::$user->table_users, array('email' => 'test@email.com'))['id'];
@@ -273,7 +289,8 @@ class UserTest extends TestCase{
      * @covers \UserAuth\User::getUserIP
      * @covers \UserAuth\User::getIP
      */
-    public function testGetUserIP(){
+    public function testGetUserIP()
+    {
         $this->assertEquals('127.0.0.1', self::$user->getUserIP());
     }
 }
