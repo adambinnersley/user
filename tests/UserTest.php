@@ -42,6 +42,8 @@ class UserTest extends TestCase
     /**
      * @covers \UserAuth\User::__construct
      * @covers \UserAuth\User::setLanguageFile
+     * @covers \UserAuth\User::getLanguageArray
+     * @covers \UserAuth\User::setLanguageArray
      */
     public function testSetLang()
     {
@@ -49,6 +51,12 @@ class UserTest extends TestCase
         $this->assertObjectHasAttribute('lang', $setLang);
         $this->assertArrayHasKey('user_blocked', self::$user->lang);
         $this->assertEquals("Email address is too long.", self::$user->lang['email_long']);
+        $this->assertNotEmpty(self::$user->getLanguageArray());
+        $defaultLang = self::$user->getLanguageArray();
+        $this->assertArrayNotHasKey('lang_new_test', $defaultLang);
+        self::$user->setLanguageArray(['lang_new_test' => 'Hello']);
+        $this->assertArrayHasKey('lang_new_test', self::$user->getLanguageArray());
+        self::$user->setLanguageArray($defaultLang);
     }
     
     /**
