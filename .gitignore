@@ -3,3 +3,4 @@
 *.lock
 *.bak
 *.cache
+clover.xml
