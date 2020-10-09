@@ -3,11 +3,12 @@ namespace UserAuth;
 
 use DBAL\Database;
 
-interface UserInterface{
-    public function login($email, $password, $remember = 0, $captcha = NULL);
-    public function register($email, $password, $repeatpassword, $params = array(), $captcha = NULL, $sendmail = NULL);
+interface UserInterface
+{
+    public function login($email, $password, $remember = 0, $captcha = null);
+    public function register($email, $password, $repeatpassword, $params = array(), $captcha = null, $sendmail = null);
     public function activate($key);
-    public function requestReset($email, $sendmail = NULL);
+    public function requestReset($email, $sendmail = null);
     public function logout($hash);
     public function getHash($password);
     public function getUID($email);
@@ -17,12 +18,12 @@ interface UserInterface{
     public function getUserID();
     public function getUserEmail();
     public function getUserInfo();
-    public function deleteUser($uid, $password, $captcha = NULL);
+    public function deleteUser($uid, $password, $captcha = null);
     public function getRequest($key, $type);
-    public function resetPass($key, $password, $repeatpassword, $captcha = NULL);
+    public function resetPass($key, $password, $repeatpassword, $captcha = null);
     public function resendActivation($email);
-    public function changePassword($uid, $currpass, $newpass, $repeatnewpass, $captcha = NULL);
-    public function changeEmail($uid, $email, $password, $captcha = NULL);
+    public function changePassword($uid, $currpass, $newpass, $repeatnewpass, $captcha = null);
+    public function changeEmail($uid, $email, $password, $captcha = null);
     public function isBlocked();
     public function getRandomKey($length = 20);
     public function isLogged();
