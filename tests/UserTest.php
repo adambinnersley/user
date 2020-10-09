@@ -234,6 +234,8 @@ class UserTest extends TestCase
         $this->assertFalse(self::$user->isEmailTaken("unused@email.com"));
         $this->assertArrayHasKey('id', self::$user->checkEmailExists("test@email.com"));
         $this->assertFalse(self::$user->checkEmailExists("unused@email.com"));
+        $this->assertFalse(self::$user->checkEmailExists("invalid^email.com"));
+        $this->assertFalse(self::$user->checkEmailExists("invalid@emailcom"));
     }
     
     /**
