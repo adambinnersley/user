@@ -95,6 +95,7 @@ class User implements UserInterface
     public function setLanguageFile($location)
     {
         if (file_exists($location)) {
+            $lang = [];
             require $location;
             $this->lang = $lang;
         }
@@ -1179,6 +1180,7 @@ class User implements UserInterface
     /**
      * Set the time that the user last logged in to the website
      * @param int $userid This should be the users ID
+     * @param string|false If you want to set the date to a specific value enter the string here else set to false for current date/time
      * @return boolean If the field has been updated will return true else returns false
      */
     public function setLastLogin($userid, $date = false)
