@@ -499,7 +499,7 @@ class User implements UserInterface
     * @param boolean|null $sendmail
     * @return int|array
     */
-    protected function addUser($email, $password, $params = [], $sendmail = true)
+    protected function addUser($email, $password, $params = [], $sendmail = null)
     {
         $return = [];
         $return['error'] = true;
