@@ -184,7 +184,7 @@ class User implements UserInterface
      * @param string $password This should be the users password
      * @return array|false If the information is correct the users information will be returned else will return false
      */
-    protected function checkUsernamePassword($username, $password)
+    public function checkUsernamePassword($username, $password)
     {
         $data = $this->db->select($this->table_users, ['email' => strtolower($username)]);
         if (empty($data)) {
