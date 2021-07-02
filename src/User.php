@@ -938,6 +938,8 @@ class User implements UserInterface
         }
 
         $this->db->update($this->table_users, ['password' => $this->getHash($newpass)], ['id' => $uid]);
+        $this->deleteExistingSessions($uid);
+        $this->addSession($uid, true);
         $return['error'] = false;
         $return['message'] = $this->lang["password_changed"];
         return $return;
