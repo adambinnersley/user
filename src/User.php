@@ -186,7 +186,7 @@ class User implements UserInterface
      */
     public function checkUsernamePassword($username, $password)
     {
-        $data = $this->db->select($this->table_users, ['email' => strtolower($username)]);
+        $data = $this->db->select($this->table_users, ['email' => strtolower($username)], '*', [], false);
         if (empty($data)) {
             return false;
         }
@@ -205,7 +205,7 @@ class User implements UserInterface
     public function checkEmailExists($email)
     {
         if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            return $this->db->select($this->table_users, ['email' => $email], ['id']);
+            return $this->db->select($this->table_users, ['email' => $email], ['id'], [], false);
         }
         return false;
     }
@@ -449,7 +449,7 @@ class User implements UserInterface
             return false;
         }
 
-        $row = $this->db->select($this->table_sessions, ['hash' => $hash]);
+        $row = $this->db->select($this->table_sessions, ['hash' => $hash], '*', [], false);
         if (empty($row)) {
             return false;
         }
@@ -475,7 +475,7 @@ class User implements UserInterface
     */
     public function getSessionUID($hash)
     {
-        return $this->db->fetchColumn($this->table_sessions, ['hash' => $hash], ['uid']);
+        return $this->db->fetchColumn($this->table_sessions, ['hash' => $hash], ['uid'], 0, [], false);
     }
     
      /**
@@ -485,7 +485,7 @@ class User implements UserInterface
     */
     public function isEmailTaken($email)
     {
-        if ($this->db->count($this->table_users, ['email' => $email]) == 0) {
+        if ($this->db->count($this->table_users, ['email' => $email], false) == 0) {
             return false;
         }
         return true;
@@ -530,7 +530,7 @@ class User implements UserInterface
     */
     protected function getBaseUser($uid)
     {
-        $data = $this->db->select($this->table_users, ['id' => $uid], ['email', 'password', 'isactive', 'last_login']);
+        $data = $this->db->select($this->table_users, ['id' => $uid], ['email', 'password', 'isactive', 'last_login'], [], false);
         if (empty($data)) {
             return false;
         }
@@ -547,7 +547,7 @@ class User implements UserInterface
     public function getUser($uid)
     {
         if (is_integer($uid)) {
-            $data = $this->db->select($this->table_users, ['id' => $uid]);
+            $data = $this->db->select($this->table_users, ['id' => $uid], '*', [], false);
             if (empty($data)) {
                 return false;
             }
@@ -629,7 +629,7 @@ class User implements UserInterface
             }
         }
 
-        $row = $this->db->select($this->table_requests, ['uid' => $uid, 'type' => $type], ['id', 'expire']);
+        $row = $this->db->select($this->table_requests, ['uid' => $uid, 'type' => $type], ['id', 'expire'], [], false);
         if (!empty($row)) {
             if (strtotime(date("Y-m-d H:i:s")) < strtotime($row['expire'])) {
                 $return['message'] = $this->lang["reset_exists"];
@@ -674,7 +674,7 @@ class User implements UserInterface
         $return = [];
         $return['error'] = true;
         
-        $request = $this->db->select($this->table_requests, ['rkey' => $key, 'type' => $type], ['id', 'uid', 'expire']);
+        $request = $this->db->select($this->table_requests, ['rkey' => $key, 'type' => $type], ['id', 'uid', 'expire'], [], false);
         if (empty($request)) {
             $this->addAttempt();
             $return['message'] = $this->lang[$type."key_incorrect"];
@@ -1172,7 +1172,7 @@ class User implements UserInterface
      */
     public function comparePasswords($userid, $password_for_check)
     {
-        $data = $this->db->select($this->table_users, ['id' => $userid], ['password']);
+        $data = $this->db->select($this->table_users, ['id' => $userid], ['password'], [], false);
         if (empty($data)) {
             return false;
         }
