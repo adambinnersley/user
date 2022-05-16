@@ -1188,7 +1188,10 @@ class User implements UserInterface
     public function setLastLogin($userid, $date = false)
     {
         if ($date === false) {
-            $date = date('Y-m-d', strtotime($this->getBaseUser($userid)['last_login']));
+            $userInfo = $this->getBaseUser($userid);
+            if(is_array($userInfo)) {
+                $date = date('Y-m-d', strtotime($userInfo['last_login']));
+            }
         }
         if (is_numeric($userid) && $date !== date('Y-m-d')) {
             return $this->db->update($this->table_users, ['last_login' => date('Y-m-d H:i:s')], ['id' => intval($userid)]);
