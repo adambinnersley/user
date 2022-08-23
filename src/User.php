@@ -629,7 +629,7 @@ class User implements UserInterface
             }
         }
 
-        $row = $this->db->select($this->table_requests, ['uid' => $uid, 'type' => $type], ['id', 'expire'], [], false);
+        $row = $this->getUIDRequest($uid, $type);
         if (!empty($row)) {
             if (strtotime(date("Y-m-d H:i:s")) < strtotime($row['expire'])) {
                 $return['message'] = $this->lang["reset_exists"];
@@ -674,7 +674,7 @@ class User implements UserInterface
         $return = [];
         $return['error'] = true;
         
-        $request = $this->db->select($this->table_requests, ['rkey' => $key, 'type' => $type], ['id', 'uid', 'expire'], [], false);
+        $request = $this->getKeyRequest($key, $type);
         if (empty($request)) {
             $this->addAttempt();
             $return['message'] = $this->lang[$type."key_incorrect"];
@@ -690,6 +690,28 @@ class User implements UserInterface
         
         $return['error'] = false;
         return array_merge($return, $request);
+    }
+    
+    /**
+     * Gets the request from the database based on the key and type
+     * @param string $key
+     * @param string $type
+     * @return array|false
+     */
+    protected function getKeyRequest($key, $type)
+    {
+        return $this->db->select($this->table_requests, ['rkey' => $key, 'type' => $type], '*', [], false);
+    }
+    
+    /**
+     * Gets the request from the database based on the key and type
+     * @param string $uid
+     * @param string $type
+     * @return array|false
+     */
+    protected function getUIDRequest($uid, $type)
+    {
+        return $this->db->select($this->table_requests, ['uid' => $uid, 'type' => $type], '*', [], false);
     }
     
     /**
