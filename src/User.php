@@ -631,11 +631,16 @@ class User implements UserInterface
 
         $row = $this->getUIDRequest($uid, $type);
         if (!empty($row)) {
-            if (strtotime(date("Y-m-d H:i:s")) < strtotime($row['expire'])) {
+            if (strtotime(date("Y-m-d H:i:s")) < strtotime($row['expire']) && $type !== 'reset') {
                 $return['message'] = $this->lang["reset_exists"];
                 return $return;
             }
-            $this->deleteRequest($row['id']);
+            if(strtotime(date("Y-m-d H:i:s")) >= strtotime($row['expire'])) {
+                $this->deleteRequest($row['id']);
+            }
+            if($type === 'reset') {
+                $this->key = $row['rkey'];
+            }
         }
 
         if ($type == "activation" && $this->getBaseUser($uid)['isactive'] >= 1) {
@@ -643,10 +648,12 @@ class User implements UserInterface
             return $return;
         }
         
-        $this->key = $this->getRandomKey(20);
-        if (!$this->db->insert($this->table_requests, ['uid' => $uid, 'rkey' => $this->key, 'expire' => date("Y-m-d H:i:s", strtotime($this->request_key_expiration)), 'type' => $type])) {
-            $return['message'] = $this->lang["system_error"] . " #05";
-            return $return;
+        if(strlen($this->key) < 20) {
+            $this->key = $this->getRandomKey(20);
+            if (!$this->db->insert($this->table_requests, ['uid' => $uid, 'rkey' => $this->key, 'expire' => date("Y-m-d H:i:s", strtotime($this->request_key_expiration)), 'type' => $type])) {
+                $return['message'] = $this->lang["system_error"] . " #05";
+                return $return;
+            }
         }
 
         if ($sendmail === true) {
