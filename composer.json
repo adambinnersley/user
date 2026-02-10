@@ -3,9 +3,9 @@
     "description": "A user class",
     "type": "library",
     "require": {
-        "adamb/database": ">=1.4",
-        "phpmailer/phpmailer": "6.*",
-        "bjeavons/zxcvbn-php": ">=0.3.0"
+        "adamb/database": "*",
+        "phpmailer/phpmailer": "*",
+        "bjeavons/zxcvbn-php": "*"
     },
     "require-dev": {
         "php-coveralls/php-coveralls": "^2.1",
