@@ -37,6 +37,16 @@ class User implements UserInterface
     public $cookie_name = 'authID';
     public $cookie_forget = '+30 minutes';
     public $cookie_remember = '+1 year';
+
+    /**
+     * Domain used for the auth cookie. Leave empty for host-only (default).
+     * Set to a leading-dot domain (e.g. '.example.com') to share the cookie
+     * across www/non-www and subdomains — this MUST match however the calling
+     * application sets its PHP session cookie domain, otherwise a logged-in
+     * user can appear logged out when the host differs.
+     * @var string
+     */
+    public $cookie_domain = '';
     
     protected $password_cost = 11;
     protected $password_min_score = 3;
@@ -358,7 +368,14 @@ class User implements UserInterface
         if (strlen($hash) != 40) {
             return false;
         }
-        return $this->deleteSession($hash);
+        $deleted = $this->deleteSession($hash);
+        // Only clear the browser cookie if we are logging out the session that
+        // the current cookie represents (so invalidating another session by
+        // hash doesn't wipe the current visitor's cookie).
+        if (isset($_COOKIE[$this->cookie_name]) && hash_equals((string) $_COOKIE[$this->cookie_name], $hash)) {
+            $this->clearAuthCookie();
+        }
+        return $deleted;
     }
     
     /**
@@ -412,10 +429,54 @@ class User implements UserInterface
         if (!$this->db->insert($this->table_sessions, ['uid' => $uid, 'hash' => $data['hash'], 'expiredate' => $data['expire'], 'ip' => $this->getIp(), 'agent' => (isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : ''), 'cookie_crc' => sha1($data['hash'] . SITE_KEY)])) {
             return false;
         }
-        setcookie($this->cookie_name, $data['hash'], strtotime($data['expire']), '/', '', (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off' ? true : false), true);
+        $this->setAuthCookie($data['hash'], strtotime($data['expire']));
         $this->setLastLogin($uid, date('Y-m-d', strtotime($data['last_login'])));
-        
+
         return $data;
+    }
+
+    /**
+     * The cookie options used for BOTH setting and clearing the auth cookie.
+     * Keeping these in one place guarantees the clear-cookie call uses exactly
+     * the same path/domain/secure/samesite as the set-cookie call — a mismatch
+     * is why a stale cookie can survive logout.
+     * @param int $expire Unix timestamp for cookie expiry
+     * @return array
+     */
+    protected function authCookieOptions($expire)
+    {
+        return [
+            'expires' => $expire,
+            'path' => '/',
+            'domain' => $this->cookie_domain,
+            'secure' => (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off'),
+            'httponly' => true,
+            'samesite' => 'Lax',
+        ];
+    }
+
+    /**
+     * Sets the auth cookie in the browser
+     * @param string $hash The session hash to store
+     * @param int $expire Unix timestamp for cookie expiry
+     * @return void
+     */
+    protected function setAuthCookie($hash, $expire)
+    {
+        setcookie($this->cookie_name, $hash, $this->authCookieOptions($expire));
+        $_COOKIE[$this->cookie_name] = $hash;
+    }
+
+    /**
+     * Expires the auth cookie in the browser using the same parameters it was
+     * set with, and removes it from the current request so the user is treated
+     * as logged out immediately.
+     * @return void
+     */
+    protected function clearAuthCookie()
+    {
+        setcookie($this->cookie_name, '', $this->authCookieOptions(time() - 3600));
+        unset($_COOKIE[$this->cookie_name]);
     }
     
     /**
