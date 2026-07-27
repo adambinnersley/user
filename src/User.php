@@ -430,7 +430,7 @@ class User implements UserInterface
             return false;
         }
         $this->setAuthCookie($data['hash'], strtotime($data['expire']));
-        $this->setLastLogin($uid, date('Y-m-d', strtotime($data['last_login'])));
+        $this->setLastLogin($uid, $this->lastLoginDate(isset($data['last_login']) ? $data['last_login'] : null));
 
         return $data;
     }
@@ -1272,21 +1272,32 @@ class User implements UserInterface
     /**
      * Set the time that the user last logged in to the website
      * @param int $userid This should be the users ID
-     * @param string|false If you want to set the date to a specific value enter the string here else set to false for current date/time
+     * @param string|false $date If you want to set the date to a specific value enter the string here else set to false for current date/time
      * @return boolean If the field has been updated will return true else returns false
      */
     public function setLastLogin($userid, $date = false)
     {
+        if (!is_numeric($userid)) {
+            return false;
+        }
         if ($date === false) {
             $userInfo = $this->getBaseUser($userid);
-            if(is_array($userInfo)) {
-                $date = date('Y-m-d', strtotime($userInfo['last_login']));
-            }
+            $date = (is_array($userInfo) ? $this->lastLoginDate($userInfo['last_login']) : null);
         }
-        if (is_numeric($userid) && $date !== date('Y-m-d')) {
+        if ($date !== date('Y-m-d')) {
             return $this->db->update($this->table_users, ['last_login' => date('Y-m-d H:i:s')], ['id' => intval($userid)]);
         }
         return false;
+    }
+
+    /**
+     * Reduce a stored last_login value to the date it falls on so it can be compared against today
+     * @param string|null $lastLogin The stored last_login value, which is NULL for an account that has never logged in
+     * @return string|null The date portion of the value or NULL if the user has never logged in
+     */
+    protected function lastLoginDate($lastLogin)
+    {
+        return (!empty($lastLogin) ? date('Y-m-d', strtotime($lastLogin)) : null);
     }
 
     /**
