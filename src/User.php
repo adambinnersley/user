@@ -417,7 +417,7 @@ class User implements UserInterface
         if ($data === false) {
             return false;
         }
-        $data['hash'] = sha1(SITE_KEY . microtime());
+        $data['hash'] = bin2hex(random_bytes(20));
         if ($remember === true) {
             $data['expire'] = date("Y-m-d H:i:s", strtotime($this->cookie_remember));
             $data['expiretime'] = strtotime($data['expire']);
@@ -927,6 +927,7 @@ class User implements UserInterface
             return $return;
         }
 
+        $this->deleteExistingSessions($data['uid']);
         $this->deleteRequest($data['id']);
         $return['error'] = false;
         $return['message'] = $this->lang["password_reset"];
@@ -1207,16 +1208,17 @@ class User implements UserInterface
     }
     
     /**
-    * Returns a random string of a specified length
+    * Returns a random string of a specified length. Reset and activation keys
+    * are the only proof of identity on those paths, so this uses a CSPRNG.
     * @param int $length
     * @return string $key
     */
     public function getRandomKey($length = 20)
     {
-        $chars = "A1B2C3D4E5F6G7H8I9J0K1L2M3N4O5P6Q7R8S9T0U1V2W3X4Y5Z6a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6q7r8s9t0u1v2w3x4y5z6";
+        $chars = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
         $key = "";
         for ($i = 0; $i < $length; $i++) {
-            $key .= $chars[mt_rand(0, strlen($chars) - 1)];
+            $key .= $chars[random_int(0, strlen($chars) - 1)];
         }
         return $key;
     }
