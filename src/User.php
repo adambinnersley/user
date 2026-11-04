@@ -1224,15 +1224,13 @@ class User implements UserInterface
     }
     
     /**
-    * Returns IP address
-    * @return string $ip
+    * The connecting address. X-Forwarded-For is set by the client unless a
+    * trusted proxy strips it, so it is never used for login throttling.
+    * @return string
     */
     public function getIp()
     {
-        if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] != '') {
-            return $_SERVER['HTTP_X_FORWARDED_FOR'];
-        }
-        return $_SERVER['REMOTE_ADDR'];
+        return $_SERVER['REMOTE_ADDR'] ?? '';
     }
     
     /**
